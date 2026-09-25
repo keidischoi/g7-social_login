@@ -1,0 +1,26 @@
+{
+    "identifier": "g7-social_login",
+    "vendor": "William Cho",
+    "name": {
+        "ko": "소셜 로그인 (카카오/구글/네이버)",
+        "en": "Social Login (Kakao/Google/Naver)"
+    },
+    "version": "1.1.0",
+    "license": "MIT",
+    "description": {
+        "ko": "카카오·구글·네이버 계정으로 로그인/회원가입할 수 있게 합니다. 제공자가 인증한 이메일일 때만, 그 이메일이 같고 이메일 인증을 마친 기존 회원과 자동으로 연동되며, 마이페이지에서 소셜 계정을 직접 연동/해제할 수 있습니다.",
+        "en": "Adds Kakao, Google and Naver OAuth login/signup. A social account is auto-linked only when the provider reports its email as verified and it matches an existing member whose own email is verified; members can manually link/unlink social accounts from their profile page."
+    },
+    "g7_version": ">=7.0.10",
+    "dependencies": {
+        "modules": {},
+        "plugins": {}
+    },
+    "assets": {
+        "handlers": false
+    },
+    "loading": {
+        "strategy": "global",
+        "priority": 100
+    }
+}
