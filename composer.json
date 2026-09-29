@@ -2,7 +2,7 @@
     "name": "plugins/g7-social_login",
     "description": "Naver/Kakao/Google/Apple/Facebook/X/LINE/Microsoft/GitHub OAuth login, auto-link by verified email, and manual link/unlink from the member profile page for Gnuboard7",
     "type": "library",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "license": "MIT",
     "authors": [
         {

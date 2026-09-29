@@ -60,14 +60,14 @@ every release of this plugin ships it.
 
 ### Option A — release zip (works with or without Composer) — recommended
 
-Download `g7-social_login-v1.2.0.zip` from the
+Download `g7-social_login-v1.2.1.zip` from the
 [Releases](https://github.com/keidischoi/g7-social_login/releases) page.
 
 **New install**
 
 ```bash
 # extract so that the folder becomes plugins/_pending/g7-social_login
-unzip g7-social_login-v1.2.0.zip -d plugins/_pending/
+unzip g7-social_login-v1.2.1.zip -d plugins/_pending/
 php artisan plugin:install g7-social_login
 php artisan plugin:activate g7-social_login
 php artisan template:cache-clear
@@ -77,7 +77,7 @@ php artisan template:cache-clear
 (external zip), or on the command line:
 
 ```bash
-php artisan plugin:update g7-social_login --zip=/path/to/g7-social_login-v1.2.0.zip
+php artisan plugin:update g7-social_login --zip=/path/to/g7-social_login-v1.2.1.zip
 php artisan cache:clear
 php artisan template:cache-clear
 ```
@@ -339,12 +339,12 @@ Members created through social sign-up remain as regular members.
 - 로그인 후 이동 경로는 사이트 내부 상대경로만 허용(오픈 리다이렉트 방지)
 
 ### 설치 / 업데이트
-릴리즈 zip(`g7-social_login-v1.2.0.zip`)에는 `vendor/`와 `vendor-bundle.zip`이 들어 있어 Composer가
+릴리즈 zip(`g7-social_login-v1.2.1.zip`)에는 `vendor/`와 `vendor-bundle.zip`이 들어 있어 Composer가
 없는 서버(공유 호스팅 등)에서도 설치·업데이트됩니다.
 
 새로 설치:
 ```bash
-unzip g7-social_login-v1.2.0.zip -d plugins/_pending/
+unzip g7-social_login-v1.2.1.zip -d plugins/_pending/
 php artisan plugin:install g7-social_login
 php artisan plugin:activate g7-social_login
 php artisan template:cache-clear
@@ -352,7 +352,7 @@ php artisan template:cache-clear
 
 1.1.x에서 업데이트: 관리자 → 플러그인 → g7-social_login → 업데이트(외부 zip)로 올리거나
 ```bash
-php artisan plugin:update g7-social_login --zip=/경로/g7-social_login-v1.2.0.zip
+php artisan plugin:update g7-social_login --zip=/경로/g7-social_login-v1.2.1.zip
 php artisan cache:clear
 php artisan template:cache-clear
 ```

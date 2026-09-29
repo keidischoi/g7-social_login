@@ -5,7 +5,7 @@
         "ko": "소셜 로그인 (네이버/카카오/구글/애플/페이스북/X/라인/MS/깃허브)",
         "en": "Social Login (Naver/Kakao/Google/Apple/Facebook/X/LINE/Microsoft/GitHub)"
     },
-    "version": "1.2.0",
+    "version": "1.2.1",
     "license": "MIT",
     "github_url": "https://github.com/keidischoi/g7-social_login",
     "description": {

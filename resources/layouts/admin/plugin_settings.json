@@ -1,5 +1,5 @@
 {
-    "version": "1.2.0",
+    "version": "1.2.1",
     "layout_name": "plugin_settings",
     "permissions": [
         "core.plugins.update"
@@ -208,25 +208,28 @@
                                                 "id": "callback_naver",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-naver"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.naver ?? '/api/plugins/g7-social_login/naver/callback'}}"
+                                                            "id": "g7sl-callback-naver",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.naver ?? '/api/plugins/g7-social_login/naver/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -369,25 +372,28 @@
                                                 "id": "callback_kakao",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-kakao"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.kakao ?? '/api/plugins/g7-social_login/kakao/callback'}}"
+                                                            "id": "g7sl-callback-kakao",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.kakao ?? '/api/plugins/g7-social_login/kakao/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -530,25 +536,28 @@
                                                 "id": "callback_google",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-google"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.google ?? '/api/plugins/g7-social_login/google/callback'}}"
+                                                            "id": "g7sl-callback-google",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.google ?? '/api/plugins/g7-social_login/google/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -691,25 +700,28 @@
                                                 "id": "callback_apple",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-apple"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.apple ?? '/api/plugins/g7-social_login/apple/callback'}}"
+                                                            "id": "g7sl-callback-apple",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.apple ?? '/api/plugins/g7-social_login/apple/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -919,25 +931,28 @@
                                                 "id": "callback_facebook",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-facebook"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.facebook ?? '/api/plugins/g7-social_login/facebook/callback'}}"
+                                                            "id": "g7sl-callback-facebook",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.facebook ?? '/api/plugins/g7-social_login/facebook/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -1080,25 +1095,28 @@
                                                 "id": "callback_x",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-x"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.x ?? '/api/plugins/g7-social_login/x/callback'}}"
+                                                            "id": "g7sl-callback-x",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.x ?? '/api/plugins/g7-social_login/x/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -1241,25 +1259,28 @@
                                                 "id": "callback_line",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-line"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.line ?? '/api/plugins/g7-social_login/line/callback'}}"
+                                                            "id": "g7sl-callback-line",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.line ?? '/api/plugins/g7-social_login/line/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -1402,25 +1423,28 @@
                                                 "id": "callback_microsoft",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-microsoft"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.microsoft ?? '/api/plugins/g7-social_login/microsoft/callback'}}"
+                                                            "id": "g7sl-callback-microsoft",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.microsoft ?? '/api/plugins/g7-social_login/microsoft/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },
@@ -1563,25 +1587,28 @@
                                                 "id": "callback_github",
                                                 "type": "basic",
                                                 "name": "Div",
-                                                "props": {
-                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
-                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
-                                                        "name": "P",
+                                                        "name": "Label",
                                                         "props": {
-                                                            "className": "form-hint"
+                                                            "className": "form-label",
+                                                            "htmlFor": "g7sl-callback-github"
                                                         },
                                                         "text": "$t:g7-social_login.settings.callback_label"
                                                     },
                                                     {
                                                         "type": "basic",
-                                                        "name": "Code",
+                                                        "name": "Input",
                                                         "props": {
-                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
-                                                        },
-                                                        "text": "{{g7sl_callback_urls?.data?.urls?.github ?? '/api/plugins/g7-social_login/github/callback'}}"
+                                                            "id": "g7sl-callback-github",
+                                                            "type": "text",
+                                                            "readOnly": true,
+                                                            "value": "{{g7sl_callback_urls?.data?.urls?.github ?? '/api/plugins/g7-social_login/github/callback'}}",
+                                                            "autoComplete": "off",
+                                                            "spellCheck": false,
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
                                                     }
                                                 ]
                                             },

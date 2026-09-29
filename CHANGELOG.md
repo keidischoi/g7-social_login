@@ -5,6 +5,28 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-09-29
+
+### 수정
+
+- 관리자 설정 화면의 제공자별 "Callback URL (Redirect URI) — 콘솔에 등록" 칸이 다크 테마에서 흰 배경에
+  옅은 회색 글자로 보여 거의 읽을 수 없던 문제를 고쳤습니다.
+  - 원인: 다크 배경용 클래스(`dark:bg-gray-900/40`)가 관리자 템플릿 CSS에 없어 무시되고, 밝은 배경
+    (`bg-gray-50`)과 다크용 밝은 글자(`dark:text-gray-200`)만 적용되었습니다.
+  - 이제 콜백 URL을 Client ID 칸과 같은 코어 입력칸 스타일(`.input`)의 **읽기 전용 입력칸**으로 표시합니다.
+    다크 테마에서는 어두운 배경에 밝은 글자, 라이트 테마에서는 밝은 배경에 어두운 글자로 테마를 그대로
+    따릅니다. 고정폭 글꼴이며, 칸을 클릭한 뒤 전체 선택(Ctrl+A)·복사(Ctrl+C)하기 쉽습니다.
+  - 라벨은 입력칸과 연결(`label for`)했고, 입력칸에는 `name`이 없어 설정값으로 저장되지 않습니다.
+- 설정 화면의 나머지 요소에서 관리자 CSS에 없는 클래스나 다크 짝이 없는 밝은 배경이 없는지 점검했습니다
+  (추가로 고칠 곳 없음). 설정 레이아웃 버전은 1.2.1입니다.
+
+### 참고
+
+- 업데이트하면 설정 화면 레이아웃이 자동으로 갱신됩니다. 업데이트 후 `php artisan cache:clear`,
+  `php artisan template:cache-clear`를 실행하고 브라우저를 새로고침하세요. 그래도 예전 모양이면
+  `php artisan plugin:refresh-layout g7-social_login`을 실행하세요.
+- 로그인 화면·설정값·동작은 바뀌지 않았습니다.
+
 ## [1.2.0] - 2026-09-29
 
 ### 추가
