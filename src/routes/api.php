@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Plugins\G7\SocialLogin\Http\Controllers\SocialAuthController;
+use Plugins\G7\SocialLogin\Support\Providers;
 use Plugins\G7\SocialLogin\Support\SocialLoginRateLimiters;
 
 /*
@@ -14,14 +15,20 @@ use Plugins\G7\SocialLogin\Support\SocialLoginRateLimiters;
  */
 
 Route::get('{provider}/redirect', [SocialAuthController::class, 'redirect'])
-    ->whereIn('provider', ['kakao', 'google', 'naver'])
+    ->whereIn('provider', Providers::ORDER)
     ->middleware(['start.api.session', 'throttle:'.SocialLoginRateLimiters::OAUTH])
     ->name('redirect');
 
 Route::get('{provider}/callback', [SocialAuthController::class, 'callback'])
-    ->whereIn('provider', ['kakao', 'google', 'naver'])
+    ->whereIn('provider', Providers::ORDER)
     ->middleware(['start.api.session', 'throttle:'.SocialLoginRateLimiters::OAUTH])
     ->name('callback');
+
+// Sign in with Apple 은 콜백을 교차 사이트 form_post(POST)로 보낸다. 세션 쿠키가 실리지 않으므로
+// 세션을 열지 않고 같은 주소의 GET 콜백으로 303 전달만 한다(SocialAuthController::appleFormPost).
+Route::post('apple/callback', [SocialAuthController::class, 'appleFormPost'])
+    ->middleware(['throttle:'.SocialLoginRateLimiters::OAUTH])
+    ->name('apple.form_post');
 
 Route::post('exchange', [SocialAuthController::class, 'exchange'])
     ->middleware(['throttle:'.SocialLoginRateLimiters::EXCHANGE])
@@ -30,15 +37,18 @@ Route::post('exchange', [SocialAuthController::class, 'exchange'])
 Route::middleware(['auth:sanctum', 'check.user_status'])->group(function () {
     Route::get('accounts', [SocialAuthController::class, 'accounts'])->name('accounts');
 
+    // 설정 화면용 Callback URL 목록(사이트 주소 + 고정 경로라 민감 정보는 없다)
+    Route::get('callback-urls', [SocialAuthController::class, 'callbackUrls'])->name('callback_urls');
+
     // start.api.session — 연동 대상 회원을 URL 이 아니라 세션에 싣기 위해 세션을 시작한다.
     // 인증을 통과한 이 요청만 세션에 값을 쓸 수 있으므로, 남이 만든 링크로는 대상을 지정할 수 없다.
     Route::post('{provider}/link/prepare', [SocialAuthController::class, 'linkPrepare'])
-        ->whereIn('provider', ['kakao', 'google', 'naver'])
+        ->whereIn('provider', Providers::ORDER)
         ->middleware(['start.api.session', 'throttle:'.SocialLoginRateLimiters::ACCOUNT])
         ->name('link.prepare');
 
     Route::delete('{provider}/unlink', [SocialAuthController::class, 'unlink'])
-        ->whereIn('provider', ['kakao', 'google', 'naver'])
+        ->whereIn('provider', Providers::ORDER)
         ->middleware(['throttle:'.SocialLoginRateLimiters::ACCOUNT])
         ->name('unlink');
 });

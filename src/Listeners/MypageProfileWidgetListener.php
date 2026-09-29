@@ -5,6 +5,7 @@ namespace Plugins\G7\SocialLogin\Listeners;
 use App\Contracts\Extension\HookListenerInterface;
 use Illuminate\Support\Facades\Log;
 use Plugins\G7\SocialLogin\Support\BrandIcons;
+use Plugins\G7\SocialLogin\Support\Providers;
 
 /**
  * 마이페이지 프로필 화면(`mypage/profile`)에 "연동된 소셜 계정" 카드를
@@ -111,11 +112,7 @@ class MypageProfileWidgetListener implements HookListenerInterface
                 [
                     'type' => 'basic', 'name' => 'Div',
                     'props' => ['className' => 'space-y-3'],
-                    'children' => [
-                        $this->buildProviderRow('kakao'),
-                        $this->buildProviderRow('google'),
-                        $this->buildProviderRow('naver'),
-                    ],
+                    'children' => array_map(fn (string $provider) => $this->buildProviderRow($provider), Providers::ORDER),
                 ],
             ],
         ];
@@ -143,11 +140,7 @@ class MypageProfileWidgetListener implements HookListenerInterface
                         [
                             'type' => 'basic', 'name' => 'Img',
                             'props' => [
-                                'src' => match ($provider) {
-                                    'kakao' => BrandIcons::kakaoDataUri(),
-                                    'naver' => BrandIcons::naverDataUri(),
-                                    default => BrandIcons::googleDataUri(),
-                                },
+                                'src' => BrandIcons::dataUri($provider),
                                 'alt' => '',
                                 'className' => 'w-6 h-6 flex-shrink-0',
                             ],

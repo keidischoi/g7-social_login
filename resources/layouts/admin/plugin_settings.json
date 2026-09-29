@@ -1,5 +1,5 @@
 {
-    "version": "1.0.0",
+    "version": "1.2.0",
     "layout_name": "plugin_settings",
     "permissions": [
         "core.plugins.update"
@@ -20,6 +20,14 @@
             "auth_required": true,
             "initLocal": "form",
             "refetchOnMount": true
+        },
+        {
+            "id": "g7sl_callback_urls",
+            "type": "api",
+            "endpoint": "/api/plugins/g7-social_login/callback-urls",
+            "method": "GET",
+            "auto_fetch": true,
+            "auth_required": true
         }
     ],
     "slots": {
@@ -49,22 +57,31 @@
                         "id": "notice_banner",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "alert-info" },
+                        "props": {
+                            "className": "alert-info"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "flex gap-3" },
+                                "props": {
+                                    "className": "flex gap-3"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Icon",
-                                        "props": { "name": "circle-info", "className": "text-xl text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" }
+                                        "props": {
+                                            "name": "circle-info",
+                                            "className": "text-xl text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5"
+                                        }
                                     },
                                     {
                                         "type": "basic",
                                         "name": "P",
-                                        "props": { "className": "text-info-soft" },
+                                        "props": {
+                                            "className": "text-info-soft"
+                                        },
                                         "text": "$t:g7-social_login.settings.notice"
                                     }
                                 ]
@@ -76,17 +93,24 @@
                         "type": "basic",
                         "name": "Div",
                         "if": "{{_local.errors}}",
-                        "props": { "className": "alert-danger" },
+                        "props": {
+                            "className": "alert-danger"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "flex gap-3" },
+                                "props": {
+                                    "className": "flex gap-3"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Icon",
-                                        "props": { "name": "triangle-exclamation", "className": "text-xl text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" }
+                                        "props": {
+                                            "name": "triangle-exclamation",
+                                            "className": "text-xl text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5"
+                                        }
                                     },
                                     {
                                         "type": "basic",
@@ -95,14 +119,18 @@
                                             {
                                                 "type": "basic",
                                                 "name": "H3",
-                                                "props": { "className": "text-error-strong" },
+                                                "props": {
+                                                    "className": "text-error-strong"
+                                                },
                                                 "text": "$t:admin.plugins.settings.validation_error"
                                             },
                                             {
                                                 "type": "basic",
                                                 "name": "Ul",
                                                 "if": "{{typeof _local.errors === 'object' && Object.keys(_local.errors).length > 0}}",
-                                                "props": { "className": "mt-2 list-disc list-inside space-y-1" },
+                                                "props": {
+                                                    "className": "mt-2 list-disc list-inside space-y-1"
+                                                },
                                                 "iteration": {
                                                     "source": "Object.entries(_local.errors ?? {}).flatMap(([field, messages]) => Array.isArray(messages) ? messages : [messages])",
                                                     "item_var": "message"
@@ -111,7 +139,9 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Li",
-                                                        "props": { "className": "grid-3col-responsive" },
+                                                        "props": {
+                                                            "className": "grid-3col-responsive"
+                                                        },
                                                         "text": "{{message}}"
                                                     }
                                                 ]
@@ -126,214 +156,94 @@
                         "id": "settings_form",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700" },
+                        "props": {
+                            "className": "mt-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
+                        },
                         "children": [
                             {
                                 "id": "settings_fields",
                                 "type": "basic",
                                 "name": "Div",
-                                "props": { "className": "p-6 space-y-8" },
+                                "props": {
+                                    "className": "p-6 space-y-8"
+                                },
                                 "children": [
-                                    {
-                                        "id": "kakao_section",
-                                        "type": "basic",
-                                        "name": "Div",
-                                        "props": { "className": "space-y-4" },
-                                        "children": [
-                                            {
-                                                "type": "basic",
-                                                "name": "H3",
-                                                "props": { "className": "section-heading" },
-                                                "text": "$t:g7-social_login.settings.kakao_section_title"
-                                            },
-                                            {
-                                                "id": "field_kakao_enabled",
-                                                "type": "basic",
-                                                "name": "Label",
-                                                "props": { "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300" },
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Checkbox",
-                                                        "props": { "name": "kakao_enabled" }
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Span",
-                                                        "text": "$t:g7-social_login.settings.kakao_enabled.label"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "id": "field_kakao_client_id",
-                                                "type": "basic",
-                                                "name": "Div",
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Label",
-                                                        "props": { "className": "form-label" },
-                                                        "text": "$t:g7-social_login.settings.kakao_client_id.label"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "P",
-                                                        "props": { "className": "form-hint" },
-                                                        "text": "$t:g7-social_login.settings.kakao_client_id.hint"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Input",
-                                                        "props": {
-                                                            "type": "text",
-                                                            "name": "kakao_client_id",
-                                                            "className": "mt-1 focus:border-transparent"
-                                                        }
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "id": "field_kakao_client_secret",
-                                                "type": "basic",
-                                                "name": "Div",
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Label",
-                                                        "props": { "className": "form-label" },
-                                                        "text": "$t:g7-social_login.settings.kakao_client_secret.label"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "P",
-                                                        "props": { "className": "form-hint" },
-                                                        "text": "$t:g7-social_login.settings.kakao_client_secret.hint"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Input",
-                                                        "props": {
-                                                            "type": "password",
-                                                            "name": "kakao_client_secret",
-                                                            "placeholder": "••••••••••••",
-                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "id": "google_section",
-                                        "type": "basic",
-                                        "name": "Div",
-                                        "props": { "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700" },
-                                        "children": [
-                                            {
-                                                "type": "basic",
-                                                "name": "H3",
-                                                "props": { "className": "section-heading" },
-                                                "text": "$t:g7-social_login.settings.google_section_title"
-                                            },
-                                            {
-                                                "id": "field_google_enabled",
-                                                "type": "basic",
-                                                "name": "Label",
-                                                "props": { "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300" },
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Checkbox",
-                                                        "props": { "name": "google_enabled" }
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Span",
-                                                        "text": "$t:g7-social_login.settings.google_enabled.label"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "id": "field_google_client_id",
-                                                "type": "basic",
-                                                "name": "Div",
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Label",
-                                                        "props": { "className": "form-label" },
-                                                        "text": "$t:g7-social_login.settings.google_client_id.label"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "P",
-                                                        "props": { "className": "form-hint" },
-                                                        "text": "$t:g7-social_login.settings.google_client_id.hint"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Input",
-                                                        "props": {
-                                                            "type": "text",
-                                                            "name": "google_client_id",
-                                                            "className": "mt-1 focus:border-transparent"
-                                                        }
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "id": "field_google_client_secret",
-                                                "type": "basic",
-                                                "name": "Div",
-                                                "children": [
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Label",
-                                                        "props": { "className": "form-label" },
-                                                        "text": "$t:g7-social_login.settings.google_client_secret.label"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "P",
-                                                        "props": { "className": "form-hint" },
-                                                        "text": "$t:g7-social_login.settings.google_client_secret.hint"
-                                                    },
-                                                    {
-                                                        "type": "basic",
-                                                        "name": "Input",
-                                                        "props": {
-                                                            "type": "password",
-                                                            "name": "google_client_secret",
-                                                            "placeholder": "••••••••••••",
-                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    },
                                     {
                                         "id": "naver_section",
                                         "type": "basic",
                                         "name": "Div",
-                                        "props": { "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700" },
+                                        "props": {
+                                            "className": "space-y-4"
+                                        },
                                         "children": [
                                             {
                                                 "type": "basic",
-                                                "name": "H3",
-                                                "props": { "className": "section-heading" },
-                                                "text": "$t:g7-social_login.settings.naver_section_title"
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.naver_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developers.naver.com/apps/",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_naver",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.naver ?? '/api/plugins/g7-social_login/naver/callback'}}"
+                                                    }
+                                                ]
                                             },
                                             {
                                                 "id": "field_naver_enabled",
                                                 "type": "basic",
                                                 "name": "Label",
-                                                "props": { "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300" },
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
                                                 "children": [
                                                     {
                                                         "type": "basic",
                                                         "name": "Checkbox",
-                                                        "props": { "name": "naver_enabled" }
+                                                        "props": {
+                                                            "name": "naver_enabled"
+                                                        }
                                                     },
                                                     {
                                                         "type": "basic",
@@ -343,6 +253,14 @@
                                                 ]
                                             },
                                             {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.naver_enabled.hint"
+                                            },
+                                            {
                                                 "id": "field_naver_client_id",
                                                 "type": "basic",
                                                 "name": "Div",
@@ -350,13 +268,17 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "form-label" },
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
                                                         "text": "$t:g7-social_login.settings.naver_client_id.label"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "form-hint" },
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
                                                         "text": "$t:g7-social_login.settings.naver_client_id.hint"
                                                     },
                                                     {
@@ -365,6 +287,7 @@
                                                         "props": {
                                                             "type": "text",
                                                             "name": "naver_client_id",
+                                                            "autoComplete": "off",
                                                             "className": "mt-1 focus:border-transparent"
                                                         }
                                                     }
@@ -378,13 +301,17 @@
                                                     {
                                                         "type": "basic",
                                                         "name": "Label",
-                                                        "props": { "className": "form-label" },
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
                                                         "text": "$t:g7-social_login.settings.naver_client_secret.label"
                                                     },
                                                     {
                                                         "type": "basic",
                                                         "name": "P",
-                                                        "props": { "className": "form-hint" },
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
                                                         "text": "$t:g7-social_login.settings.naver_client_secret.hint"
                                                     },
                                                     {
@@ -394,6 +321,1362 @@
                                                             "type": "password",
                                                             "name": "naver_client_secret",
                                                             "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "kakao_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.kakao_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developers.kakao.com/console/app",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_kakao",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.kakao ?? '/api/plugins/g7-social_login/kakao/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_kakao_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "kakao_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.kakao_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.kakao_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_kakao_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.kakao_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.kakao_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "kakao_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_kakao_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.kakao_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.kakao_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "kakao_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "google_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.google_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://console.cloud.google.com/apis/credentials",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_google",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.google ?? '/api/plugins/g7-social_login/google/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_google_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "google_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.google_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.google_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_google_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.google_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.google_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "google_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_google_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.google_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.google_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "google_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "apple_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developer.apple.com/account/resources/identifiers/list/serviceId",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_apple",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.apple ?? '/api/plugins/g7-social_login/apple/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_apple_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "apple_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.apple_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.apple_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_apple_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "apple_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_apple_team_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_team_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_team_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "apple_team_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_apple_key_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_key_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_key_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "apple_key_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_apple_private_key",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_private_key.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.apple_private_key.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Textarea",
+                                                        "props": {
+                                                            "name": "apple_private_key",
+                                                            "rows": 6,
+                                                            "placeholder": "-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----",
+                                                            "className": "mt-1 w-full font-mono text-xs focus:border-transparent",
+                                                            "spellCheck": false,
+                                                            "autoComplete": "off"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "facebook_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.facebook_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developers.facebook.com/apps/",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_facebook",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.facebook ?? '/api/plugins/g7-social_login/facebook/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_facebook_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "facebook_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.facebook_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.facebook_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_facebook_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.facebook_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.facebook_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "facebook_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_facebook_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.facebook_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.facebook_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "facebook_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "x_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.x_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developer.x.com/en/portal/dashboard",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_x",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.x ?? '/api/plugins/g7-social_login/x/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_x_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "x_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.x_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.x_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_x_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.x_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.x_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "x_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_x_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.x_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.x_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "x_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "line_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.line_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://developers.line.biz/console/",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_line",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.line ?? '/api/plugins/g7-social_login/line/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_line_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "line_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.line_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.line_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_line_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.line_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.line_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "line_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_line_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.line_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.line_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "line_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "microsoft_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.microsoft_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://entra.microsoft.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_microsoft",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.microsoft ?? '/api/plugins/g7-social_login/microsoft/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_microsoft_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "microsoft_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.microsoft_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.microsoft_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_microsoft_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.microsoft_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.microsoft_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "microsoft_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_microsoft_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.microsoft_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.microsoft_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "microsoft_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
+                                                            "className": "mt-1 font-mono text-sm focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "github_section",
+                                        "type": "basic",
+                                        "name": "Div",
+                                        "props": {
+                                            "className": "space-y-4 pt-6 border-t border-gray-200 dark:border-gray-700"
+                                        },
+                                        "children": [
+                                            {
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "flex flex-wrap items-center justify-between gap-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "H3",
+                                                        "props": {
+                                                            "className": "section-heading"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.github_section_title"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "A",
+                                                        "props": {
+                                                            "href": "https://github.com/settings/developers",
+                                                            "target": "_blank",
+                                                            "rel": "noopener noreferrer",
+                                                            "className": "text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.console_label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "callback_github",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "props": {
+                                                    "className": "rounded-md bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 px-3 py-2"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.callback_label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Code",
+                                                        "props": {
+                                                            "className": "block mt-1 text-sm font-mono break-all select-all text-gray-800 dark:text-gray-200"
+                                                        },
+                                                        "text": "{{g7sl_callback_urls?.data?.urls?.github ?? '/api/plugins/g7-social_login/github/callback'}}"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_github_enabled",
+                                                "type": "basic",
+                                                "name": "Label",
+                                                "props": {
+                                                    "className": "flex items-center gap-2 cursor-pointer text-sm text-gray-700 dark:text-gray-300"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Checkbox",
+                                                        "props": {
+                                                            "name": "github_enabled"
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Span",
+                                                        "text": "$t:g7-social_login.settings.github_enabled.label"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "basic",
+                                                "name": "P",
+                                                "props": {
+                                                    "className": "form-hint"
+                                                },
+                                                "text": "$t:g7-social_login.settings.github_enabled.hint"
+                                            },
+                                            {
+                                                "id": "field_github_client_id",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.github_client_id.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.github_client_id.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "text",
+                                                            "name": "github_client_id",
+                                                            "autoComplete": "off",
+                                                            "className": "mt-1 focus:border-transparent"
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "id": "field_github_client_secret",
+                                                "type": "basic",
+                                                "name": "Div",
+                                                "children": [
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Label",
+                                                        "props": {
+                                                            "className": "form-label"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.github_client_secret.label"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "P",
+                                                        "props": {
+                                                            "className": "form-hint"
+                                                        },
+                                                        "text": "$t:g7-social_login.settings.github_client_secret.hint"
+                                                    },
+                                                    {
+                                                        "type": "basic",
+                                                        "name": "Input",
+                                                        "props": {
+                                                            "type": "password",
+                                                            "name": "github_client_secret",
+                                                            "placeholder": "••••••••••••",
+                                                            "autoComplete": "new-password",
                                                             "className": "mt-1 font-mono text-sm focus:border-transparent"
                                                         }
                                                     }
@@ -409,35 +1692,47 @@
                         "id": "guide_section",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-6" },
+                        "props": {
+                            "className": "mt-6 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700 p-6"
+                        },
                         "children": [
                             {
                                 "type": "basic",
                                 "name": "H3",
-                                "props": { "className": "section-heading mb-4" },
+                                "props": {
+                                    "className": "section-heading mb-4"
+                                },
                                 "text": "$t:g7-social_login.settings.guide_title"
                             },
                             {
                                 "type": "basic",
                                 "name": "Ol",
-                                "props": { "className": "list-decimal list-inside space-y-3" },
+                                "props": {
+                                    "className": "list-decimal list-inside space-y-3"
+                                },
                                 "children": [
                                     {
                                         "type": "basic",
                                         "name": "Li",
-                                        "props": { "className": "text-label" },
+                                        "props": {
+                                            "className": "text-label"
+                                        },
                                         "text": "$t:g7-social_login.settings.guide_item_1"
                                     },
                                     {
                                         "type": "basic",
                                         "name": "Li",
-                                        "props": { "className": "text-label" },
+                                        "props": {
+                                            "className": "text-label"
+                                        },
                                         "text": "$t:g7-social_login.settings.guide_item_2"
                                     },
                                     {
                                         "type": "basic",
                                         "name": "Li",
-                                        "props": { "className": "text-label" },
+                                        "props": {
+                                            "className": "text-label"
+                                        },
                                         "text": "$t:g7-social_login.settings.guide_item_3"
                                     }
                                 ]
@@ -448,18 +1743,32 @@
                         "id": "footer_buttons",
                         "type": "basic",
                         "name": "Div",
-                        "props": { "className": "sticky-footer-buttons" },
+                        "props": {
+                            "className": "sticky-footer-buttons"
+                        },
                         "children": [
                             {
                                 "id": "cancel_button",
                                 "type": "basic",
                                 "name": "Button",
-                                "props": { "className": "btn btn-secondary" },
+                                "props": {
+                                    "className": "btn btn-secondary"
+                                },
                                 "actions": [
-                                    { "type": "click", "handler": "navigate", "params": { "path": "/admin/plugins" } }
+                                    {
+                                        "type": "click",
+                                        "handler": "navigate",
+                                        "params": {
+                                            "path": "/admin/plugins"
+                                        }
+                                    }
                                 ],
                                 "children": [
-                                    { "type": "basic", "name": "Span", "text": "$t:common.cancel" }
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "text": "$t:common.cancel"
+                                    }
                                 ]
                             },
                             {
@@ -477,35 +1786,58 @@
                                         "actions": [
                                             {
                                                 "handler": "setState",
-                                                "params": { "target": "local", "isSaving": true, "errors": null }
+                                                "params": {
+                                                    "target": "local",
+                                                    "isSaving": true,
+                                                    "errors": null
+                                                }
                                             },
                                             {
                                                 "handler": "apiCall",
                                                 "auth_required": true,
                                                 "target": "/api/admin/plugins/{{route.identifier}}/settings",
-                                                "params": { "method": "PUT", "body": "{{_local.form}}" },
+                                                "params": {
+                                                    "method": "PUT",
+                                                    "body": "{{_local.form}}"
+                                                },
                                                 "onSuccess": [
                                                     {
                                                         "handler": "setState",
-                                                        "params": { "target": "local", "isSaving": false, "hasChanges": false }
+                                                        "params": {
+                                                            "target": "local",
+                                                            "isSaving": false,
+                                                            "hasChanges": false
+                                                        }
                                                     },
                                                     {
                                                         "handler": "toast",
-                                                        "params": { "type": "success", "message": "$t:admin.plugins.settings.save_success" }
+                                                        "params": {
+                                                            "type": "success",
+                                                            "message": "$t:admin.plugins.settings.save_success"
+                                                        }
                                                     },
                                                     {
                                                         "handler": "refetchDataSource",
-                                                        "params": { "dataSourceId": "settings" }
+                                                        "params": {
+                                                            "dataSourceId": "settings"
+                                                        }
                                                     }
                                                 ],
                                                 "onError": [
                                                     {
                                                         "handler": "setState",
-                                                        "params": { "target": "local", "isSaving": false, "errors": "{{error.errors}}" }
+                                                        "params": {
+                                                            "target": "local",
+                                                            "isSaving": false,
+                                                            "errors": "{{error.errors}}"
+                                                        }
                                                     },
                                                     {
                                                         "handler": "toast",
-                                                        "params": { "type": "error", "message": "{{error.message ?? '$t:admin.plugins.settings.save_error'}}" }
+                                                        "params": {
+                                                            "type": "error",
+                                                            "message": "{{error.message ?? '$t:admin.plugins.settings.save_error'}}"
+                                                        }
                                                     }
                                                 ]
                                             }
@@ -513,9 +1845,27 @@
                                     }
                                 ],
                                 "children": [
-                                    { "type": "basic", "name": "Icon", "if": "{{_local.isSaving}}", "props": { "name": "spinner", "className": "spinner-sm" } },
-                                    { "type": "basic", "name": "Span", "if": "{{!_local.isSaving}}", "text": "$t:common.save" },
-                                    { "type": "basic", "name": "Span", "if": "{{_local.isSaving}}", "text": "$t:common.saving" }
+                                    {
+                                        "type": "basic",
+                                        "name": "Icon",
+                                        "if": "{{_local.isSaving}}",
+                                        "props": {
+                                            "name": "spinner",
+                                            "className": "spinner-sm"
+                                        }
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "if": "{{!_local.isSaving}}",
+                                        "text": "$t:common.save"
+                                    },
+                                    {
+                                        "type": "basic",
+                                        "name": "Span",
+                                        "if": "{{_local.isSaving}}",
+                                        "text": "$t:common.saving"
+                                    }
                                 ]
                             }
                         ]
@@ -536,6 +1886,25 @@
         }
     },
     "schema": {
+        "naver_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.naver_enabled.label",
+            "hint": "$t:g7-social_login.settings.naver_enabled.hint"
+        },
+        "naver_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.naver_client_id.label",
+            "hint": "$t:g7-social_login.settings.naver_client_id.hint"
+        },
+        "naver_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.naver_client_secret.label",
+            "hint": "$t:g7-social_login.settings.naver_client_secret.hint"
+        },
         "kakao_enabled": {
             "type": "boolean",
             "default": false,
@@ -574,24 +1943,131 @@
             "label": "$t:g7-social_login.settings.google_client_secret.label",
             "hint": "$t:g7-social_login.settings.google_client_secret.hint"
         },
-        "naver_enabled": {
+        "apple_enabled": {
             "type": "boolean",
             "default": false,
-            "label": "$t:g7-social_login.settings.naver_enabled.label",
-            "hint": "$t:g7-social_login.settings.naver_enabled.hint"
+            "label": "$t:g7-social_login.settings.apple_enabled.label",
+            "hint": "$t:g7-social_login.settings.apple_enabled.hint"
         },
-        "naver_client_id": {
+        "apple_client_id": {
             "type": "string",
             "default": "",
-            "label": "$t:g7-social_login.settings.naver_client_id.label",
-            "hint": "$t:g7-social_login.settings.naver_client_id.hint"
+            "label": "$t:g7-social_login.settings.apple_client_id.label",
+            "hint": "$t:g7-social_login.settings.apple_client_id.hint"
         },
-        "naver_client_secret": {
+        "apple_team_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.apple_team_id.label",
+            "hint": "$t:g7-social_login.settings.apple_team_id.hint"
+        },
+        "apple_key_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.apple_key_id.label",
+            "hint": "$t:g7-social_login.settings.apple_key_id.hint"
+        },
+        "apple_private_key": {
             "type": "string",
             "default": "",
             "sensitive": true,
-            "label": "$t:g7-social_login.settings.naver_client_secret.label",
-            "hint": "$t:g7-social_login.settings.naver_client_secret.hint"
+            "label": "$t:g7-social_login.settings.apple_private_key.label",
+            "hint": "$t:g7-social_login.settings.apple_private_key.hint"
+        },
+        "facebook_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.facebook_enabled.label",
+            "hint": "$t:g7-social_login.settings.facebook_enabled.hint"
+        },
+        "facebook_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.facebook_client_id.label",
+            "hint": "$t:g7-social_login.settings.facebook_client_id.hint"
+        },
+        "facebook_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.facebook_client_secret.label",
+            "hint": "$t:g7-social_login.settings.facebook_client_secret.hint"
+        },
+        "x_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.x_enabled.label",
+            "hint": "$t:g7-social_login.settings.x_enabled.hint"
+        },
+        "x_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.x_client_id.label",
+            "hint": "$t:g7-social_login.settings.x_client_id.hint"
+        },
+        "x_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.x_client_secret.label",
+            "hint": "$t:g7-social_login.settings.x_client_secret.hint"
+        },
+        "line_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.line_enabled.label",
+            "hint": "$t:g7-social_login.settings.line_enabled.hint"
+        },
+        "line_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.line_client_id.label",
+            "hint": "$t:g7-social_login.settings.line_client_id.hint"
+        },
+        "line_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.line_client_secret.label",
+            "hint": "$t:g7-social_login.settings.line_client_secret.hint"
+        },
+        "microsoft_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.microsoft_enabled.label",
+            "hint": "$t:g7-social_login.settings.microsoft_enabled.hint"
+        },
+        "microsoft_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.microsoft_client_id.label",
+            "hint": "$t:g7-social_login.settings.microsoft_client_id.hint"
+        },
+        "microsoft_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.microsoft_client_secret.label",
+            "hint": "$t:g7-social_login.settings.microsoft_client_secret.hint"
+        },
+        "github_enabled": {
+            "type": "boolean",
+            "default": false,
+            "label": "$t:g7-social_login.settings.github_enabled.label",
+            "hint": "$t:g7-social_login.settings.github_enabled.hint"
+        },
+        "github_client_id": {
+            "type": "string",
+            "default": "",
+            "label": "$t:g7-social_login.settings.github_client_id.label",
+            "hint": "$t:g7-social_login.settings.github_client_id.hint"
+        },
+        "github_client_secret": {
+            "type": "string",
+            "default": "",
+            "sensitive": true,
+            "label": "$t:g7-social_login.settings.github_client_secret.label",
+            "hint": "$t:g7-social_login.settings.github_client_secret.hint"
         }
     }
 }

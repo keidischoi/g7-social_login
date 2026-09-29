@@ -1,8 +1,8 @@
 {
     "name": "plugins/g7-social_login",
-    "description": "Kakao/Google/Naver OAuth login, auto-link by verified email, and manual link/unlink from the member profile page for Gnuboard7",
+    "description": "Naver/Kakao/Google/Apple/Facebook/X/LINE/Microsoft/GitHub OAuth login, auto-link by verified email, and manual link/unlink from the member profile page for Gnuboard7",
     "type": "library",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "license": "MIT",
     "authors": [
         {
@@ -13,8 +13,7 @@
         "php": "^8.2",
         "laravel/socialite": "^5.0",
         "socialiteproviders/manager": "^4.0",
-        "socialiteproviders/kakao": "^4.0",
-        "socialiteproviders/naver": "^4.0"
+        "socialiteproviders/kakao": "^4.0"
     },
     "replace": {
         "carbonphp/carbon-doctrine-types": "*",

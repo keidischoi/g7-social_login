@@ -5,16 +5,20 @@ namespace Plugins\G7\SocialLogin\Listeners;
 use App\Contracts\Extension\HookListenerInterface;
 use Illuminate\Support\Facades\Log;
 use Plugins\G7\SocialLogin\Support\BrandIcons;
+use Plugins\G7\SocialLogin\Support\Providers;
+use Plugins\G7\SocialLogin\Support\SettingsValidation;
 use Plugins\G7\SocialLogin\Support\SocialLoginRateLimiters;
 
 /**
- * 로그인 화면(`auth/login`)에 카카오/구글/네이버 버튼 + 교환코드 처리 init_action 을
+ * 로그인 화면(`auth/login`)에 "SNS 간편 로그인" 원형 아이콘 버튼 줄 + 교환코드 처리 init_action 을
  * `core.layout_extension.after_apply` 필터로 주입한다. 로그인 화면에는
  * extension_point 가 없어(조사 결과) 코어/템플릿 파일을 건드리지 않는 이 방식이
  * 유일한 무변경 주입 경로다 (g7-forum-addon 의 board/show 위젯 주입과 동일 패턴).
  *
  * 버튼은 `_global.plugins['g7-social_login'].{provider}_enabled` 로 켜져 있을
  * 때만 보인다(플러그인 설정의 frontend_schema 노출값, 별도 API 호출 불필요).
+ * 순서는 Providers::ORDER, 켜진 것 중 앞의 3개는 첫 줄에, 나머지는 "그 외 로그인"
+ * 토글로 여닫는 두 번째 줄에 놓인다(토글은 켜진 제공자가 3개를 넘을 때만 보인다).
  */
 class LoginPageWidgetListener implements HookListenerInterface
 {
@@ -36,10 +40,30 @@ class LoginPageWidgetListener implements HookListenerInterface
                 'type' => 'filter',
                 'priority' => 20,
             ],
+            // 설정 저장 검증(켠 제공자는 키 필수)도 이 리스너가 구독한다.
+            // 별도 리스너 클래스를 새로 추가하면, 1.1.x 에서 제자리 업데이트할 때 코어가 훅 캐시를
+            // "업데이트 전 plugin.php"(이미 메모리에 올라간 클래스)의 리스너 목록으로 다시 굽기 때문에
+            // 새 클래스가 빠진 채로 남는다(plugin:activate 로도 재생성되지 않음). 이미 등록돼 있는
+            // 리스너에 붙이면 캐시 재생성 때 새 파일의 getSubscribedHooks() 가 읽혀 바로 반영된다.
+            'core.plugin_settings.update_validation_rules' => [
+                'method' => 'addSettingsValidationRules',
+                'type' => 'filter',
+                'priority' => 10,
+            ],
         ];
     }
 
     public function handle(...$args): void {}
+
+    /**
+     * @param  array<string, mixed>  $rules
+     * @param  array<string, mixed>  $input
+     * @return array<string, mixed>
+     */
+    public function addSettingsValidationRules(array $rules, string $identifier = '', array $input = []): array
+    {
+        return (new SettingsValidation)->addEnabledProviderRules($rules, $identifier, $input);
+    }
 
     public function injectWidget(array $layout, int $templateId = 0): array
     {
@@ -114,116 +138,175 @@ class LoginPageWidgetListener implements HookListenerInterface
         return $children;
     }
 
+    /** "그 외 로그인" 접이식 영역의 DOM id(aria-controls 대상) */
+    private const MORE_REGION_ID = 'g7sl-more-providers';
+
+    /** 접이식 영역 열림 상태(_local) 키 — 로그인 폼의 다른 _local 값과 겹치지 않게 접두사를 붙인다 */
+    private const MORE_STATE_KEY = 'g7slMoreOpen';
+
+    /**
+     * 켜진 제공자만 순서대로 남긴 배열을 만드는 표현식(중괄호 없음).
+     *
+     * 켜짐 여부는 `_global.plugins['g7-social_login'].{p}_enabled`(frontend_schema 노출값)만으로
+     * 판단한다 — 자격증명은 노출하지 않는다. 표시 위치(첫 줄/접이식)는 이 배열 안의 순번으로 정한다.
+     */
+    private function enabledListExpr(): string
+    {
+        $order = "['".implode("', '", Providers::ORDER)."']";
+
+        return "{$order}.filter(p => _global.plugins?.['g7-social_login']?.[p + '_enabled'] === true)";
+    }
+
     private function buildWidgetNode(): array
     {
+        $list = $this->enabledListExpr();
+        $limit = Providers::MAIN_ROW_LIMIT;
+        $open = '_local?.'.self::MORE_STATE_KEY.' === true';
+
+        $mainButtons = [];
+        $moreButtons = [];
+        foreach (Providers::ORDER as $provider) {
+            $mainButtons[] = $this->buildProviderButton($provider, "{{{$list}.indexOf('{$provider}') > -1 && {$list}.indexOf('{$provider}') < {$limit}}}");
+            $moreButtons[] = $this->buildProviderButton($provider, "{{{$list}.indexOf('{$provider}') >= {$limit}}}");
+        }
+
+        $rowClass = 'flex flex-wrap items-start justify-center gap-x-5 gap-y-4';
+
         return [
             'id' => self::WIDGET_ID,
-            'comment' => 'g7-social_login: 소셜 로그인 버튼',
+            'comment' => 'g7-social_login: SNS 간편 로그인(원형 아이콘 버튼)',
             'type' => 'basic',
             'name' => 'Div',
-            'if' => "{{_global.plugins?.['g7-social_login']?.kakao_enabled || _global.plugins?.['g7-social_login']?.google_enabled || _global.plugins?.['g7-social_login']?.naver_enabled}}",
-            'props' => ['className' => 'mt-6 space-y-3'],
+            // 켜진 제공자가 하나도 없으면 제목·구분선까지 통째로 숨긴다.
+            'if' => "{{{$list}.length > 0}}",
+            'props' => ['className' => 'mt-6'],
             'children' => [
                 [
                     'type' => 'basic',
+                    'name' => 'P',
+                    'props' => ['className' => 'mb-3 text-center text-sm text-gray-500 dark:text-gray-400'],
+                    'text' => '$t:g7-social_login.login.heading',
+                ],
+                [
+                    'comment' => '첫 줄: 켜진 제공자 중 앞의 '.$limit.'개',
+                    'type' => 'basic',
                     'name' => 'Div',
-                    'props' => ['className' => 'relative my-4'],
+                    'props' => ['className' => $rowClass],
+                    'children' => $mainButtons,
+                ],
+                [
+                    'comment' => "'그 외 로그인' 토글 — 켜진 제공자가 {$limit}개를 넘을 때만",
+                    'type' => 'basic',
+                    'name' => 'Div',
+                    'if' => "{{{$list}.length > {$limit}}}",
+                    'props' => ['className' => 'mt-3 flex justify-center'],
                     'children' => [
                         [
-                            'type' => 'basic', 'name' => 'Div',
-                            'props' => ['className' => 'absolute inset-0 flex items-center'],
-                            'children' => [[
-                                'type' => 'basic', 'name' => 'Div',
-                                'props' => ['className' => 'w-full border-t border-gray-200 dark:border-gray-700'],
+                            'type' => 'basic',
+                            'name' => 'Button',
+                            'props' => [
+                                'type' => 'button',
+                                'id' => 'g7sl-more-toggle',
+                                'aria-controls' => self::MORE_REGION_ID,
+                                'aria-expanded' => "{{{$open} ? 'true' : 'false'}}",
+                                'className' => 'inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:underline cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500',
+                            ],
+                            'actions' => [[
+                                'type' => 'click',
+                                'handler' => 'setState',
+                                'params' => [
+                                    'target' => 'local',
+                                    self::MORE_STATE_KEY => "{{!({$open})}}",
+                                ],
                             ]],
-                        ],
-                        [
-                            'type' => 'basic', 'name' => 'Div',
-                            'props' => ['className' => 'relative flex justify-center'],
-                            'children' => [[
-                                'type' => 'basic', 'name' => 'Span',
-                                'props' => ['className' => 'px-3 bg-white dark:bg-gray-800 text-sm text-gray-500 dark:text-gray-400'],
-                                'text' => '$t:g7-social_login.login.divider',
-                            ]],
+                            'children' => [
+                                [
+                                    'type' => 'basic',
+                                    'name' => 'Span',
+                                    'text' => '$t:g7-social_login.login.more_toggle',
+                                ],
+                                [
+                                    'type' => 'basic',
+                                    'name' => 'Img',
+                                    'props' => [
+                                        'src' => BrandIcons::chevronDataUri(),
+                                        'alt' => '',
+                                        'aria-hidden' => 'true',
+                                        'width' => 12,
+                                        'height' => 12,
+                                        'className' => "{{'w-3 h-3 transition-transform duration-200 ' + ({$open} ? 'rotate-180' : '')}}",
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
                 [
+                    'comment' => "'그 외 로그인' 접이식 영역 — 닫혀 있으면 invisible 이라 탭 이동·보조기기에서도 빠진다",
                     'type' => 'basic',
-                    'name' => 'A',
-                    'if' => "{{_global.plugins?.['g7-social_login']?.kakao_enabled}}",
+                    'name' => 'Div',
+                    'if' => "{{{$list}.length > {$limit}}}",
                     'props' => [
-                        // 고정 경로 — g7 표현식 평가기(SafeExpressionEvaluator)는 encodeURIComponent 등
-                        // 화이트리스트 밖 전역 함수를 호출하지 못하고, 실패 시 {{ }} 원문을 그대로 흘린다.
-                        'href' => '/api/plugins/g7-social_login/kakao/redirect',
-                        'className' => 'w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium bg-[#FEE500] text-black/85 hover:opacity-90 transition-opacity',
+                        'id' => self::MORE_REGION_ID,
+                        'role' => 'region',
+                        'aria-labelledby' => 'g7sl-more-toggle',
+                        'className' => "{{'overflow-hidden transition-all duration-300 ease-out ' + ({$open} ? 'max-h-96 opacity-100 visible mt-4' : 'max-h-0 opacity-0 invisible')}}",
                     ],
                     'children' => [
                         [
                             'type' => 'basic',
-                            'name' => 'Img',
-                            'props' => [
-                                'src' => BrandIcons::kakaoDataUri(),
-                                'alt' => '',
-                                'className' => 'w-5 h-5',
-                            ],
-                        ],
-                        [
-                            'type' => 'basic',
-                            'name' => 'Span',
-                            'text' => '$t:g7-social_login.login.kakao_button',
+                            'name' => 'Div',
+                            'props' => ['className' => $rowClass.' pb-1'],
+                            'children' => $moreButtons,
                         ],
                     ],
                 ],
                 [
+                    'comment' => '구분선',
                     'type' => 'basic',
-                    'name' => 'A',
-                    'if' => "{{_global.plugins?.['g7-social_login']?.google_enabled}}",
+                    'name' => 'Div',
+                    'props' => ['className' => 'mt-6 border-t border-gray-200 dark:border-gray-700'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * 원형 아이콘 + 아래 라벨 버튼 하나.
+     *
+     * href 는 고정 경로다 — g7 표현식 평가기(SafeExpressionEvaluator)는 encodeURIComponent 등
+     * 화이트리스트 밖 전역 함수를 호출하지 못하고, 실패 시 {{ }} 원문을 그대로 흘린다.
+     */
+    private function buildProviderButton(string $provider, string $if): array
+    {
+        return [
+            'type' => 'basic',
+            'name' => 'A',
+            'if' => $if,
+            'props' => [
+                'href' => "/api/plugins/g7-social_login/{$provider}/redirect",
+                'aria-label' => "\$t:g7-social_login.login.{$provider}_button",
+                'title' => "\$t:g7-social_login.login.{$provider}_button",
+                'data-provider' => $provider,
+                'className' => 'group flex flex-col items-center gap-1.5 rounded-lg p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 dark:ring-offset-gray-800',
+            ],
+            'children' => [
+                [
+                    'type' => 'basic',
+                    'name' => 'Img',
                     'props' => [
-                        'href' => '/api/plugins/g7-social_login/google/redirect',
-                        'className' => 'w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors',
-                    ],
-                    'children' => [
-                        [
-                            'type' => 'basic',
-                            'name' => 'Img',
-                            'props' => [
-                                'src' => BrandIcons::googleDataUri(),
-                                'alt' => '',
-                                'className' => 'w-5 h-5',
-                            ],
-                        ],
-                        [
-                            'type' => 'basic',
-                            'name' => 'Span',
-                            'text' => '$t:g7-social_login.login.google_button',
-                        ],
+                        'src' => BrandIcons::dataUri($provider),
+                        'alt' => '',
+                        'width' => 48,
+                        'height' => 48,
+                        'className' => 'w-12 h-12 rounded-full shadow-sm transition-transform duration-150 group-hover:scale-105',
                     ],
                 ],
                 [
                     'type' => 'basic',
-                    'name' => 'A',
-                    'if' => "{{_global.plugins?.['g7-social_login']?.naver_enabled}}",
-                    'props' => [
-                        'href' => '/api/plugins/g7-social_login/naver/redirect',
-                        'className' => 'w-full flex items-center justify-center gap-2 py-3 rounded-lg font-medium bg-[#03C75A] text-white hover:opacity-90 transition-opacity',
-                    ],
-                    'children' => [
-                        [
-                            'type' => 'basic',
-                            'name' => 'Img',
-                            'props' => [
-                                'src' => BrandIcons::naverDataUri(),
-                                'alt' => '',
-                                'className' => 'w-5 h-5',
-                            ],
-                        ],
-                        [
-                            'type' => 'basic',
-                            'name' => 'Span',
-                            'text' => '$t:g7-social_login.login.naver_button',
-                        ],
-                    ],
+                    'name' => 'Span',
+                    'props' => ['className' => 'whitespace-nowrap text-xs text-gray-600 dark:text-gray-400 group-hover:text-gray-900'],
+                    'text' => "\$t:g7-social_login.login.labels.{$provider}",
                 ],
             ],
         ];

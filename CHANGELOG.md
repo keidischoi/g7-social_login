@@ -5,6 +5,58 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-09-29
+
+### 추가
+
+- 애플·페이스북·X·라인·마이크로소프트·깃허브 로그인을 추가해 지원 제공자가 9개가 되었습니다
+  (표시 순서: 네이버, 카카오, 구글, 애플, 페이스북, X, 라인, 마이크로소프트, 깃허브).
+  - 애플: Services ID·Team ID·Key ID·개인키(.p8)로 client secret(ES256 JWT, 1시간)을 로그인할 때마다
+    만들고, `id_token`을 애플 공개키(JWKS)로 검증합니다(서명·`iss`·`aud`·`exp`). 애플의 form_post(POST)
+    콜백은 같은 주소의 GET으로 303 전달해 SameSite=Lax 세션에서도 state 검증이 됩니다.
+  - X: OAuth 2.0 + PKCE(S256), scope `users.read users.email tweet.read`.
+  - 라인: LINE Login v2.1. 이메일은 `id_token`을 LINE verify API로 검증한 뒤 읽습니다.
+  - 마이크로소프트: Entra ID `common` 엔드포인트(개인·회사/학교 계정), Graph `/v1.0/me`.
+  - 페이스북(Graph API v23.0)·깃허브(기본·인증된 이메일만 사용)는 Socialite 기본 드라이버를 씁니다.
+- 제공자마다 사용 여부 스위치와 키 입력칸을 따로 둡니다. 켠 제공자는 키 항목을 모두 채워야 저장됩니다.
+- 관리자 설정 화면의 제공자별 칸에 **등록할 콜백 URL**(내 사이트 기준)과 **개발자 콘솔 링크**를 표시합니다
+  (`GET /api/plugins/g7-social_login/callback-urls`, 로그인 필요).
+- `plugin.json`에 `github_url`을 넣어, 다음 버전부터 관리자 화면에서 GitHub 릴리즈로 업데이트할 수 있습니다.
+- Composer가 없는 서버용 `vendor-bundle.zip` / `vendor-bundle.json`(코어 표준 번들 형식)을 함께 배포합니다.
+
+### 변경
+
+- 로그인 버튼을 새로 디자인했습니다. "SNS 간편 로그인" 제목 아래 48px 원형 아이콘 버튼과 그 아래 작은
+  이름을 가운데 정렬로 보여 주고, 아래에 얇은 구분선을 둡니다.
+  - 켠 제공자 중 앞의 3개만 첫 줄에 보이고, 나머지는 **"그 외 로그인"** 토글(화살표 포함,
+    `aria-expanded`·`aria-controls` 지원)로 펼치는 접힌 영역에 둡니다. 기본은 접힘이며, 켠 제공자가 3개
+    이하면 토글이 나오지 않습니다. 좁은 화면에서는 줄바꿈됩니다.
+  - **설정에서 켠 제공자만** 첫 줄과 접힌 영역 어디에든 표시됩니다.
+- 브랜드 아이콘을 PNG에서 각 사의 공식 색상을 쓴 인라인 SVG로 바꿨습니다(마이페이지 연동 목록 포함).
+  `resources/images/*.png`는 삭제했습니다.
+- 네이버 드라이버를 `vendor/socialiteproviders/naver`(수동 배치)에서 플러그인 `src/Socialite/`로 옮기고,
+  `socialiteproviders/naver` 의존성을 제거했습니다. `composer.lock`을 Composer로 다시 생성했습니다.
+- 제공자 HTTP 요청에 제한 시간(연결 5초, 전체 15초)을 둡니다.
+
+### 수정
+
+- 끈 제공자나 키가 빈 제공자로 들어온 콜백(애플 POST 콜백 포함)은 제공자에게 요청을 보내지 않고
+  `social_error=provider_unavailable`로 거절합니다.
+
+### 보안
+
+- 페이스북·라인·마이크로소프트는 API가 이메일 인증 여부를 주지 않거나 테넌트가 임의로 넣을 수 있는 값이라
+  (마이크로소프트 nOAuth 문제) 이메일 자동 연동을 하지 않습니다. 이 경우 임시 이메일로 가입되며, 기존 회원은
+  마이페이지에서 직접 연동할 수 있습니다.
+
+### 참고
+
+- 업데이트 후 `php artisan cache:clear`와 `php artisan template:cache-clear`를 실행하세요(관리자 화면만 쓸 수
+  있다면 브라우저 새로고침). 기존 네이버·카카오·구글 설정은 그대로 유지되고 새 제공자는 꺼진 상태로 추가됩니다.
+- 각 제공자 콘솔에 `https://도메인/api/plugins/g7-social_login/{naver|kakao|google|apple|facebook|x|line|microsoft|github}/callback`
+  을 등록해야 합니다. 마이크로소프트 클라이언트 비밀은 만료되므로(최대 24개월) 만료 전에 새로 넣어야 합니다.
+- 1.1.0 릴리즈에는 네이버가 이미 포함되어 있었습니다. 이번 버전에서 네이버는 새 디자인과 순서(첫 번째)만 바뀌었습니다.
+
 ## [1.1.0] - 2026-09-25
 
 ### Added

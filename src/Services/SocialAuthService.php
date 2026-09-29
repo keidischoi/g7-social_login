@@ -13,16 +13,23 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\SocialiteManager;
+use Laravel\Socialite\Two\FacebookProvider;
+use Laravel\Socialite\Two\GithubProvider;
 use Laravel\Socialite\Two\GoogleProvider;
+use Laravel\Socialite\Two\XProvider;
 use Plugins\G7\SocialLogin\Models\SocialAccount;
 use Plugins\G7\SocialLogin\Models\SocialLoginLinkNonce;
 use Plugins\G7\SocialLogin\Models\SocialLoginUserFlag;
+use Plugins\G7\SocialLogin\Socialite\AppleProvider;
+use Plugins\G7\SocialLogin\Socialite\LineProvider;
+use Plugins\G7\SocialLogin\Socialite\MicrosoftProvider;
+use Plugins\G7\SocialLogin\Socialite\NaverProvider;
+use Plugins\G7\SocialLogin\Support\Providers;
 use Plugins\G7\SocialLogin\Support\RedirectPath;
 use SocialiteProviders\Kakao\KakaoProvider;
-use SocialiteProviders\Naver\NaverProvider;
 
 /**
- * 카카오/구글/네이버 OAuth 로직 전담 서비스.
+ * 소셜 로그인(네이버/카카오/구글/애플/페이스북/X/라인/마이크로소프트/깃허브) OAuth 로직 전담 서비스.
  *
  * `SocialiteManager::buildProvider()` 로 provider 인스턴스를 직접 조립한다 — 플러그인
  * 설정(DB)에 저장된 client_id/secret 을 코어 `config/services.php` 에 쓰지 않고
@@ -37,7 +44,7 @@ class SocialAuthService
 {
     public const IDENTIFIER = 'g7-social_login';
 
-    public const PROVIDERS = ['kakao', 'google', 'naver'];
+    public const PROVIDERS = Providers::ORDER;
 
     /** 로그인 교환코드 캐시 TTL(초) — 프론트가 즉시 교환하므로 짧게 잡는다 */
     private const EXCHANGE_TTL = 60;
@@ -64,7 +71,27 @@ class SocialAuthService
 
     public function isEnabled(string $provider): bool
     {
-        return (bool) $this->settings->get(self::IDENTIFIER, "{$provider}_enabled", false);
+        return Providers::isSupported($provider)
+            && (bool) $this->settings->get(self::IDENTIFIER, "{$provider}_enabled", false);
+    }
+
+    /**
+     * 켜져 있고 자격증명이 모두 채워져 있는지.
+     */
+    public function isConfigured(string $provider): bool
+    {
+        foreach (Providers::credentialFields($provider) as $suffix) {
+            if (trim((string) $this->settings->get(self::IDENTIFIER, "{$provider}_{$suffix}", '')) === '') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function callbackUrl(string $provider): string
+    {
+        return url(Providers::callbackPath($provider));
     }
 
     /**
@@ -72,29 +99,42 @@ class SocialAuthService
      */
     public function driverFor(string $provider): \Laravel\Socialite\Two\AbstractProvider
     {
-        if (! in_array($provider, self::PROVIDERS, true) || ! $this->isEnabled($provider)) {
+        if (! $this->isEnabled($provider)) {
             throw new \RuntimeException("provider_disabled:{$provider}");
         }
 
-        $clientId = (string) $this->settings->get(self::IDENTIFIER, "{$provider}_client_id", '');
-        $clientSecret = (string) $this->settings->get(self::IDENTIFIER, "{$provider}_client_secret", '');
-
-        if ($clientId === '' || $clientSecret === '') {
+        if (! $this->isConfigured($provider)) {
             throw new \RuntimeException("provider_not_configured:{$provider}");
         }
 
-        $redirectUrl = url("/api/plugins/".self::IDENTIFIER."/{$provider}/callback");
+        $get = fn (string $suffix): string => trim((string) $this->settings->get(self::IDENTIFIER, "{$provider}_{$suffix}", ''));
+
+        $clientId = $get('client_id');
+
+        // Apple 은 고정 secret 이 없다 — Team ID·Key ID·.p8 개인키로 매번 ES256 JWT 를 서명한다.
+        $clientSecret = $provider === 'apple'
+            ? AppleProvider::makeClientSecret($clientId, $get('team_id'), $get('key_id'), (string) $this->settings->get(self::IDENTIFIER, 'apple_private_key', ''))
+            : $get('client_secret');
 
         $config = [
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
-            'redirect' => $redirectUrl,
+            'redirect' => $this->callbackUrl($provider),
+            // 제공자 API 가 느리거나 응답이 없을 때 PHP 워커가 무기한 묶이지 않도록 제한을 둔다.
+            // `config('g7-social_login.http')` 로 Guzzle 옵션을 덧붙일 수 있다(프록시, 테스트용 handler 등).
+            'guzzle' => array_merge(['timeout' => 15, 'connect_timeout' => 5], (array) config('g7-social_login.http', [])),
         ];
 
         $providerClass = match ($provider) {
-            'kakao' => KakaoProvider::class,
             'naver' => NaverProvider::class,
-            default => GoogleProvider::class,
+            'kakao' => KakaoProvider::class,
+            'google' => GoogleProvider::class,
+            'apple' => AppleProvider::class,
+            'facebook' => FacebookProvider::class,
+            'x' => XProvider::class,
+            'line' => LineProvider::class,
+            'microsoft' => MicrosoftProvider::class,
+            'github' => GithubProvider::class,
         };
 
         /** @var \Laravel\Socialite\Two\AbstractProvider $driver */
@@ -218,13 +258,23 @@ class SocialAuthService
     /**
      * 제공자가 인증했다고 명시한 이메일만 돌려준다. 그 외(미인증·키 없음·알 수 없는 제공자)는 null.
      *
+     * 여기서 null 이면 "이메일 없음"으로 처리된다 — 기존 회원 자동 연동을 하지 않고, 신규 가입은
+     * 대체 이메일로 만든다(본인은 이메일/비밀번호로 로그인한 뒤 마이페이지에서 수동 연동 가능).
+     *
      * - kakao: `kakao_account.is_email_valid` 와 `is_email_verified` 가 둘 다 true
      * - google: `email_verified` 가 true(bool) 또는 "true"(string)
+     * - apple: 서명 검증을 마친 id_token 의 `email_verified` 가 true 또는 "true"
      * - naver: 별도의 "이메일 인증됨" 플래그를 API가 주지 않는다. 다만 네이버는 가입/이메일
      *   변경 시 자체적으로 이메일 소유를 확인시키며, 프로필 조회 응답의 `response.email`은
      *   그 검증된 주소 그대로다(카카오의 "부가 이메일"처럼 별도 미인증 상태가 없다). 그래서
      *   `response.email`이 비어있지 않으면 인증된 것으로 간주한다. 이 판단이 서비스 정책과
      *   맞지 않으면 아래 'naver' 분기를 `default => false`로 바꿔 자동연동을 끄면 된다.
+     * - x: `confirmed_email` 필드는 X 가 확인을 마친 이메일일 때만 온다.
+     * - github: 공개 프로필 이메일은 GitHub 이 인증을 마친 주소만 설정할 수 있고, 비공개면
+     *   Socialite 가 `/user/emails` 에서 primary && verified 인 주소만 골라 온다.
+     * - facebook / line: API 가 인증 여부를 명시하지 않는다 → 자동 연동에 쓰지 않는다(보수적).
+     * - microsoft: `mail`/`userPrincipalName` 은 테넌트 관리자가 소유 확인 없이 정할 수 있어
+     *   계정 탈취 벡터("nOAuth")가 된다 → 절대 인증된 이메일로 보지 않는다.
      *
      * socialiteproviders/kakao 는 매핑 단계에서 같은 판정을 이미 하지만, 그 동작에 기대지 않고
      * raw 응답을 직접 엄격하게 확인한다.
@@ -247,7 +297,11 @@ class SocialAuthService
             'kakao' => Arr::get($raw, 'kakao_account.is_email_valid') === true
                 && Arr::get($raw, 'kakao_account.is_email_verified') === true,
             'google' => in_array(Arr::get($raw, 'email_verified'), [true, 'true'], true),
+            'apple' => in_array(Arr::get($raw, 'email_verified'), [true, 'true'], true)
+                && Arr::get($raw, 'email') === $email,
             'naver' => is_string(Arr::get($raw, 'response.email')) && Arr::get($raw, 'response.email') !== '',
+            'x' => is_string(Arr::get($raw, 'confirmed_email')) && Arr::get($raw, 'confirmed_email') === $email,
+            'github' => true,
             default => false,
         };
 

@@ -10,7 +10,7 @@ use Plugins\G7\SocialLogin\Listeners\PasswordChangedFlagListener;
 use Plugins\G7\SocialLogin\Listeners\ProfileEditPasswordGateListener;
 
 /**
- * 소셜 로그인(카카오/구글/네이버) 플러그인.
+ * 소셜 로그인(네이버/카카오/구글/애플/페이스북/X/라인/마이크로소프트/깃허브) 플러그인.
  *
  * sirsoft-basic 템플릿과 코어 인증 컨트롤러는 파일 한 줄도 수정하지 않는다 —
  * 로그인/마이페이지 화면 주입은 `core.layout_extension.after_apply` 필터 훅으로,
@@ -24,7 +24,7 @@ class Plugin extends AbstractPlugin
         return [
             'author' => 'William Cho',
             'license' => 'MIT',
-            'keywords' => ['auth', 'oauth', 'kakao', 'google', 'naver', 'social-login'],
+            'keywords' => ['auth', 'oauth', 'naver', 'kakao', 'google', 'apple', 'facebook', 'x', 'twitter', 'line', 'microsoft', 'github', 'social-login'],
         ];
     }
 
@@ -49,30 +49,70 @@ class Plugin extends AbstractPlugin
     public function getSettingsSchema(): array
     {
         return [
+            'naver_enabled' => ['type' => 'boolean'],
+            'naver_client_id' => ['type' => 'string'],
+            'naver_client_secret' => ['type' => 'string', 'sensitive' => true],
             'kakao_enabled' => ['type' => 'boolean'],
             'kakao_client_id' => ['type' => 'string'],
             'kakao_client_secret' => ['type' => 'string', 'sensitive' => true],
             'google_enabled' => ['type' => 'boolean'],
             'google_client_id' => ['type' => 'string'],
             'google_client_secret' => ['type' => 'string', 'sensitive' => true],
-            'naver_enabled' => ['type' => 'boolean'],
-            'naver_client_id' => ['type' => 'string'],
-            'naver_client_secret' => ['type' => 'string', 'sensitive' => true],
+            'apple_enabled' => ['type' => 'boolean'],
+            'apple_client_id' => ['type' => 'string'],
+            'apple_team_id' => ['type' => 'string'],
+            'apple_key_id' => ['type' => 'string'],
+            'apple_private_key' => ['type' => 'string', 'sensitive' => true],
+            'facebook_enabled' => ['type' => 'boolean'],
+            'facebook_client_id' => ['type' => 'string'],
+            'facebook_client_secret' => ['type' => 'string', 'sensitive' => true],
+            'x_enabled' => ['type' => 'boolean'],
+            'x_client_id' => ['type' => 'string'],
+            'x_client_secret' => ['type' => 'string', 'sensitive' => true],
+            'line_enabled' => ['type' => 'boolean'],
+            'line_client_id' => ['type' => 'string'],
+            'line_client_secret' => ['type' => 'string', 'sensitive' => true],
+            'microsoft_enabled' => ['type' => 'boolean'],
+            'microsoft_client_id' => ['type' => 'string'],
+            'microsoft_client_secret' => ['type' => 'string', 'sensitive' => true],
+            'github_enabled' => ['type' => 'boolean'],
+            'github_client_id' => ['type' => 'string'],
+            'github_client_secret' => ['type' => 'string', 'sensitive' => true],
         ];
     }
 
     public function getConfigValues(): array
     {
         return [
+            'naver_enabled' => false,
+            'naver_client_id' => '',
+            'naver_client_secret' => '',
             'kakao_enabled' => false,
             'kakao_client_id' => '',
             'kakao_client_secret' => '',
             'google_enabled' => false,
             'google_client_id' => '',
             'google_client_secret' => '',
-            'naver_enabled' => false,
-            'naver_client_id' => '',
-            'naver_client_secret' => '',
+            'apple_enabled' => false,
+            'apple_client_id' => '',
+            'apple_team_id' => '',
+            'apple_key_id' => '',
+            'apple_private_key' => '',
+            'facebook_enabled' => false,
+            'facebook_client_id' => '',
+            'facebook_client_secret' => '',
+            'x_enabled' => false,
+            'x_client_id' => '',
+            'x_client_secret' => '',
+            'line_enabled' => false,
+            'line_client_id' => '',
+            'line_client_secret' => '',
+            'microsoft_enabled' => false,
+            'microsoft_client_id' => '',
+            'microsoft_client_secret' => '',
+            'github_enabled' => false,
+            'github_client_id' => '',
+            'github_client_secret' => '',
         ];
     }
 

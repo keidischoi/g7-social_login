@@ -4,6 +4,7 @@ namespace Plugins\G7\SocialLogin\Listeners;
 
 use App\Contracts\Extension\HookListenerInterface;
 use Plugins\G7\SocialLogin\Models\SocialAccount;
+use Plugins\G7\SocialLogin\Support\Providers;
 
 /**
  * `g7-social_login.notification.extract_data` 필터 — `auto_linked` 알림 정의가
@@ -46,13 +47,11 @@ class NotificationExtractDataListener implements HookListenerInterface
             return $default;
         }
 
-        $providerNames = ['kakao' => '카카오', 'google' => 'Google', 'naver' => '네이버'];
-
         return [
             'data' => [
                 'name' => $user->name,
                 'app_name' => config('app.name'),
-                'provider_name' => $providerNames[$account->provider] ?? $account->provider,
+                'provider_name' => Providers::name((string) $account->provider, app()->getLocale() ?: 'ko'),
                 'provider_email' => $account->provider_email ?? '',
             ],
             'context' => [

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Plugins\G7\SocialLogin\Models\SocialAccount;
 use Plugins\G7\SocialLogin\Services\SocialAuthService;
+use Plugins\G7\SocialLogin\Support\Providers;
 use Plugins\G7\SocialLogin\Support\RedirectPath;
 
 class SocialAuthController extends Controller
@@ -49,6 +50,13 @@ class SocialAuthController extends Controller
         $redirectAfter = RedirectPath::sanitize($request->session()->pull(self::SESSION_REDIRECT));
         $linkNonce = $request->session()->pull(self::SESSION_LINK_NONCE);
 
+        // 설정에서 끈(또는 키가 비어 있는) 제공자의 콜백은 제공자에게 아무 요청도 보내지 않고 거절한다.
+        if (! $this->isAvailable($provider)) {
+            return $linkNonce
+                ? $this->frontendProfileError('provider_unavailable')
+                : $this->frontendLoginError('provider_unavailable');
+        }
+
         try {
             $driver = $this->service->driverFor($provider);
             $socialUser = $driver->user();
@@ -79,6 +87,39 @@ class SocialAuthController extends Controller
         return redirect('/login?'.http_build_query([
             'social_exchange' => $code,
         ]));
+    }
+
+    /**
+     * Apple 의 form_post 콜백(POST)을 같은 주소의 GET 콜백으로 넘긴다.
+     *
+     * Apple 은 이름·이메일 scope 를 요청하면 콜백을 다른 사이트(appleid.apple.com)에서 보내는
+     * POST 로만 준다. 이 교차 사이트 POST 에는 SameSite=Lax 세션 쿠키가 실리지 않아 state·PKCE·
+     * 연동 대상 같은 세션 값을 읽을 수 없다. 303 으로 GET 콜백에 넘기면 브라우저의 최상위 GET
+     * 이동이 되어 세션 쿠키가 실리고, 이후 처리는 다른 제공자와 똑같은 `callback()` 이 맡는다.
+     * 여기서는 아무 것도 검증·저장하지 않는다(state 검증은 GET 콜백에서 세션과 대조).
+     */
+    public function appleFormPost(Request $request): RedirectResponse
+    {
+        if (! $this->isAvailable('apple')) {
+            return $this->frontendLoginError('provider_unavailable');
+        }
+
+        $params = array_filter([
+            'code' => $request->input('code'),
+            'state' => $request->input('state'),
+            'user' => $request->input('user'),
+            'error' => $request->input('error'),
+        ], fn ($v) => is_string($v) && $v !== '');
+
+        return redirect()->to(
+            url('/api/plugins/'.SocialAuthService::IDENTIFIER.'/apple/callback').'?'.http_build_query($params),
+            303
+        );
+    }
+
+    private function isAvailable(string $provider): bool
+    {
+        return $this->service->isEnabled($provider) && $this->service->isConfigured($provider);
     }
 
     private function handleLinkCallback(string $provider, string $nonce, string $providerUserId, ?string $email): RedirectResponse
@@ -136,6 +177,22 @@ class SocialAuthController extends Controller
                 'linked_providers' => $linked,
             ],
         ]);
+    }
+
+    /**
+     * 설정 화면에 보여 줄 제공자별 Callback URL(Redirect URI).
+     *
+     * 실제 OAuth 요청에 쓰는 것과 같은 `url()` 로 만든다 — 관리자가 콘솔에 등록할 값과
+     * 인가 요청의 redirect_uri 가 한 글자라도 다르면 제공자가 거부하기 때문이다.
+     */
+    public function callbackUrls(): JsonResponse
+    {
+        $urls = [];
+        foreach (Providers::ORDER as $provider) {
+            $urls[$provider] = $this->service->callbackUrl($provider);
+        }
+
+        return response()->json(['data' => ['urls' => $urls, 'consoles' => Providers::CONSOLES]]);
     }
 
     public function linkPrepare(Request $request, string $provider): JsonResponse

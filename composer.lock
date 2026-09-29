@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "PENDING-recompute-with-composer-update",
+    "content-hash": "6a03da2e290f47e83f33053317aca380",
     "packages": [
         {
             "name": "firebase/php-jwt",
@@ -352,7 +352,7 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "Hans-J\u00fcrgen Petrich",
+                    "name": "Hans-Jürgen Petrich",
                     "email": "petrich@tronic-media.com",
                     "role": "Developer"
                 },
@@ -458,55 +458,6 @@
                 "source": "https://github.com/socialiteproviders/providers"
             },
             "time": "2024-04-01T23:43:29+00:00"
-        },
-        {
-            "name": "socialiteproviders/naver",
-            "version": "4.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/SocialiteProviders/Naver.git",
-                "reference": "main"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Naver/zipball/main",
-                "reference": "main",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^8.0",
-                "socialiteproviders/manager": "^4.4"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "SocialiteProviders\\Naver\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "SocialiteProviders community"
-                }
-            ],
-            "description": "Naver OAuth2 Provider for Laravel Socialite",
-            "keywords": [
-                "naver",
-                "laravel",
-                "oauth",
-                "provider",
-                "socialite"
-            ],
-            "support": {
-                "docs": "https://socialiteproviders.com/naver",
-                "issues": "https://github.com/socialiteproviders/providers/issues",
-                "source": "https://github.com/socialiteproviders/providers"
-            },
-            "time": "2026-09-25T00:00:00+00:00"
         },
         {
             "name": "socialiteproviders/manager",

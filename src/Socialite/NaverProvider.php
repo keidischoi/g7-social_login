@@ -1,13 +1,20 @@
 <?php
 
-namespace SocialiteProviders\Naver;
+namespace Plugins\G7\SocialLogin\Socialite;
 
-use SocialiteProviders\Manager\OAuth2\AbstractProvider;
-use SocialiteProviders\Manager\OAuth2\User;
+use Laravel\Socialite\Two\AbstractProvider;
+use Laravel\Socialite\Two\User;
 
+/**
+ * 네이버 로그인(OAuth2).
+ *
+ * 1.1.0 에서는 vendor/socialiteproviders/naver 아래에 손으로 넣어 두었던 클래스다. vendor 는
+ * composer.lock 으로 재현돼야 하는데(사이트에서 composer install 이 돌면 Packagist 의
+ * socialiteproviders/naver 로 덮여 아래 state 처리 등이 사라진다) 그 보장이 없어서,
+ * 1.2.0 에서 다른 자체 제공자(Apple/LINE/Microsoft)와 함께 플러그인 소스로 옮겼다.
+ */
 class NaverProvider extends AbstractProvider
 {
-    public const IDENTIFIER = 'NAVER';
 
     protected $scopeSeparator = ' ';
 

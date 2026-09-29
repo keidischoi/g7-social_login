@@ -1,39 +1,179 @@
 {
-    "name": "Social Login (Kakao/Google/Naver)",
-    "description": "Adds Kakao, Google and Naver OAuth login/signup.",
+    "name": "Social Login (Naver/Kakao/Google/Apple/Facebook/X/LINE/Microsoft/GitHub)",
+    "description": "Adds Naver, Kakao, Google, Apple, Facebook, X, LINE, Microsoft and GitHub login/signup.",
     "settings": {
         "page_title": "Social Login Settings",
-        "page_description": "Enter the app keys issued by the Kakao/Google/Naver developer consoles and turn each provider on.",
-        "notice": "Register the redirect URI in each console as {base_url}/api/plugins/g7-social_login/kakao/callback , {base_url}/api/plugins/g7-social_login/google/callback and {base_url}/api/plugins/g7-social_login/naver/callback respectively.",
+        "page_description": "Turn each provider on and enter the keys issued in its developer console.",
+        "notice": "Register the Callback URL (Redirect URI) shown in each provider's section in that provider's developer console. Only providers that are turned on appear on the login page, and a provider can only be turned on once all of its key fields are filled in. If the login page doesn't update after saving, clear the cache.",
         "guide_title": "Setup guide",
-        "guide_item_1": "Kakao Developers > My Application > Kakao Login: issue a REST API key (Client ID) and a Client Secret.",
-        "guide_item_2": "Google Cloud Console > APIs & Services > Credentials: create an OAuth client ID.",
-        "guide_item_3": "The login button for a provider is hidden until that provider is turned on.",
+        "guide_item_1": "Enabled providers appear on the login page in this order: Naver, Kakao, Google, Apple, Facebook, X, LINE, Microsoft, GitHub. The first 3 are on the first row; the rest are on a second row that opens with \"More sign-in options\".",
+        "guide_item_2": "Callback URLs are based on the site address (APP_URL). The scheme (http/https) and www must match the address visitors actually use.",
+        "guide_item_3": "Auto-linking: a social account is linked to an existing member with the same email only when the provider vouches that the email is verified (Kakao, Google, Naver, Apple, X, GitHub). Facebook, LINE and Microsoft sign-ins create a new account; existing members can link them from their profile page.",
+        "callback_label": "Callback URL (Redirect URI) — register in the console",
+        "console_label": "Open developer console",
+        "naver_section_title": "Naver",
         "kakao_section_title": "Kakao",
         "google_section_title": "Google",
-        "naver_section_title": "Naver",
-        "kakao_enabled": { "label": "Enable Kakao login", "hint": "Show the Kakao login button on the login screen." },
-        "kakao_client_id": { "label": "Kakao REST API key", "hint": "The REST API key (app key) from the Kakao developer console." },
-        "kakao_client_secret": { "label": "Kakao Client Secret", "hint": "The Client Secret issued under Kakao Login > Security." },
-        "google_enabled": { "label": "Enable Google login", "hint": "Show the Google login button on the login screen." },
-        "google_client_id": { "label": "Google Client ID", "hint": "The OAuth client ID issued by Google Cloud Console." },
-        "google_client_secret": { "label": "Google Client Secret", "hint": "The client secret issued by Google Cloud Console." },
-        "naver_enabled": { "label": "Enable Naver login", "hint": "Show the Naver login button on the login screen." },
-        "naver_client_id": { "label": "Naver Client ID", "hint": "The Client ID from your Naver Developers application." },
-        "naver_client_secret": { "label": "Naver Client Secret", "hint": "The Client Secret from your Naver Developers application." }
+        "apple_section_title": "Apple",
+        "facebook_section_title": "Facebook",
+        "x_section_title": "X (Twitter)",
+        "line_section_title": "LINE",
+        "microsoft_section_title": "Microsoft (Entra ID)",
+        "github_section_title": "GitHub",
+        "naver_enabled": {
+            "label": "Enable Naver login",
+            "hint": "When on, the Naver button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "naver_client_id": {
+            "label": "Naver Client ID",
+            "hint": "Client ID of your Naver Developers application."
+        },
+        "naver_client_secret": {
+            "label": "Naver Client Secret",
+            "hint": "Client Secret of your Naver Developers application."
+        },
+        "kakao_enabled": {
+            "label": "Enable Kakao login",
+            "hint": "When on, the Kakao button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "kakao_client_id": {
+            "label": "Kakao REST API key",
+            "hint": "The REST API key (app key) from the Kakao Developers console."
+        },
+        "kakao_client_secret": {
+            "label": "Kakao Client Secret",
+            "hint": "Client Secret issued under Kakao Login > Security."
+        },
+        "google_enabled": {
+            "label": "Enable Google login",
+            "hint": "When on, the Google button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "google_client_id": {
+            "label": "Google client ID",
+            "hint": "OAuth client ID issued in Google Cloud Console."
+        },
+        "google_client_secret": {
+            "label": "Google client secret",
+            "hint": "OAuth client secret issued in Google Cloud Console."
+        },
+        "apple_enabled": {
+            "label": "Enable Apple login",
+            "hint": "When on, the Apple button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "apple_client_id": {
+            "label": "Services ID (client_id)",
+            "hint": "The identifier you created under Identifiers > Services IDs (e.g. com.example.web). Not the App ID."
+        },
+        "apple_team_id": {
+            "label": "Team ID",
+            "hint": "Your 10-character Apple Developer Team ID (Membership page)."
+        },
+        "apple_key_id": {
+            "label": "Key ID",
+            "hint": "10-character Key ID of the key created under Keys with \"Sign in with Apple\" enabled."
+        },
+        "apple_private_key": {
+            "label": "Private key (.p8 contents)",
+            "hint": "Open the downloaded AuthKey_XXXXXXXXXX.p8 as text and paste everything from -----BEGIN PRIVATE KEY----- to the end. It is used to sign the client_secret JWT automatically."
+        },
+        "facebook_enabled": {
+            "label": "Enable Facebook login",
+            "hint": "When on, the Facebook button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "facebook_client_id": {
+            "label": "Facebook App ID",
+            "hint": "App ID from Meta for Developers > App settings > Basic."
+        },
+        "facebook_client_secret": {
+            "label": "Facebook App Secret",
+            "hint": "App Secret on the same page."
+        },
+        "x_enabled": {
+            "label": "Enable X login",
+            "hint": "When on, the X button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "x_client_id": {
+            "label": "X OAuth 2.0 Client ID",
+            "hint": "X Developer Portal > App > Keys and tokens > OAuth 2.0 Client ID (not the API Key)."
+        },
+        "x_client_secret": {
+            "label": "X OAuth 2.0 Client Secret",
+            "hint": "OAuth 2.0 Client Secret on the same page. Set the app type to \"Web App (Confidential client)\"."
+        },
+        "line_enabled": {
+            "label": "Enable LINE login",
+            "hint": "When on, the LINE button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "line_client_id": {
+            "label": "LINE Channel ID",
+            "hint": "Channel ID from LINE Developers console > LINE Login channel > Basic settings."
+        },
+        "line_client_secret": {
+            "label": "LINE Channel secret",
+            "hint": "Channel secret on the same page."
+        },
+        "microsoft_enabled": {
+            "label": "Enable Microsoft login",
+            "hint": "When on, the Microsoft button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "microsoft_client_id": {
+            "label": "Application (client) ID",
+            "hint": "Application (client) ID from Microsoft Entra admin center > App registrations > Overview."
+        },
+        "microsoft_client_secret": {
+            "label": "Client secret value",
+            "hint": "The \"Value\" created under Certificates & secrets > New client secret (not the Secret ID). Replace it before it expires."
+        },
+        "github_enabled": {
+            "label": "Enable GitHub login",
+            "hint": "When on, the GitHub button appears on the login page and in the profile link list. All fields below are required to turn it on."
+        },
+        "github_client_id": {
+            "label": "GitHub Client ID",
+            "hint": "Client ID from GitHub > Settings > Developer settings > OAuth Apps."
+        },
+        "github_client_secret": {
+            "label": "GitHub Client Secret",
+            "hint": "Client secret generated on the same page."
+        }
     },
     "login": {
-        "kakao_button": "Continue with Kakao",
-        "google_button": "Continue with Google",
-        "naver_button": "Continue with Naver",
+        "heading": "Quick sign-in with social accounts",
+        "more_toggle": "More sign-in options",
+        "naver_button": "Sign in with Naver",
+        "kakao_button": "Sign in with Kakao",
+        "google_button": "Sign in with Google",
+        "apple_button": "Sign in with Apple",
+        "facebook_button": "Sign in with Facebook",
+        "x_button": "Sign in with X",
+        "line_button": "Sign in with LINE",
+        "microsoft_button": "Sign in with Microsoft",
+        "github_button": "Sign in with GitHub",
+        "labels": {
+            "naver": "Naver",
+            "kakao": "Kakao",
+            "google": "Google",
+            "apple": "Apple",
+            "facebook": "Facebook",
+            "x": "X",
+            "line": "LINE",
+            "microsoft": "Microsoft",
+            "github": "GitHub"
+        },
         "divider": "or",
         "too_many_attempts": "Too many sign-in requests. Please try again in a moment."
     },
     "profile": {
         "section_title": "Manage social login accounts",
+        "naver": "Naver",
         "kakao": "Kakao",
         "google": "Google",
-        "naver": "Naver",
+        "apple": "Apple",
+        "facebook": "Facebook",
+        "x": "X",
+        "line": "LINE",
+        "microsoft": "Microsoft",
+        "github": "GitHub",
         "linked": "Linked",
         "not_linked": "Not linked",
         "link_button": "Link",

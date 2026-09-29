@@ -1,39 +1,179 @@
 {
-    "name": "소셜 로그인 (카카오/구글/네이버)",
-    "description": "카카오·구글·네이버 계정으로 로그인/회원가입할 수 있게 합니다.",
+    "name": "소셜 로그인 (네이버/카카오/구글/애플/페이스북/X/라인/MS/깃허브)",
+    "description": "네이버·카카오·구글·애플·페이스북·X·라인·마이크로소프트·깃허브 계정으로 로그인/회원가입할 수 있게 합니다.",
     "settings": {
         "page_title": "소셜 로그인 설정",
-        "page_description": "카카오/구글/네이버 개발자 콘솔에서 발급받은 앱 키를 입력하고 사용 여부를 켭니다.",
-        "notice": "Redirect URI는 카카오/구글/네이버 콘솔에 각각 {base_url}/api/plugins/g7-social_login/kakao/callback , {base_url}/api/plugins/g7-social_login/google/callback , {base_url}/api/plugins/g7-social_login/naver/callback 로 등록해야 합니다.",
+        "page_description": "제공자마다 사용 여부를 켜고, 각 개발자 콘솔에서 발급받은 키를 입력합니다.",
+        "notice": "각 제공자의 개발자 콘솔에 그 제공자 칸에 표시된 Callback URL(Redirect URI)을 그대로 등록하세요. 사용을 켠 제공자만 로그인 화면에 표시되며, 켜려면 그 제공자의 키 항목을 모두 입력해야 합니다. 저장 후 로그인 화면에 바로 반영되지 않으면 캐시를 비우세요.",
         "guide_title": "설정 안내",
-        "guide_item_1": "카카오 개발자 콘솔 > 내 애플리케이션 > 카카오 로그인에서 REST API 키(Client ID)와 Client Secret을 발급받습니다.",
-        "guide_item_2": "Google Cloud Console > API 및 서비스 > 사용자 인증 정보에서 OAuth 클라이언트 ID를 생성합니다.",
-        "guide_item_3": "각 제공자를 켜기 전에는 로그인 화면에 버튼이 표시되지 않습니다.",
+        "guide_item_1": "로그인 화면에는 켜진 제공자가 네이버 → 카카오 → 구글 → 애플 → 페이스북 → X → 라인 → 마이크로소프트 → 깃허브 순서로 표시됩니다. 앞의 3개는 첫 줄에, 나머지는 \"그 외 로그인\"을 눌러 펼치는 둘째 줄에 표시됩니다.",
+        "guide_item_2": "Callback URL은 사이트 주소(APP_URL) 기준입니다. http/https, www 유무까지 실제 접속 주소와 같아야 합니다.",
+        "guide_item_3": "자동 연동: 제공자가 이메일 인증을 보증하는 경우(카카오·구글·네이버·애플·X·깃허브)에만 같은 이메일의 기존 회원에 자동 연동됩니다. 페이스북·라인·마이크로소프트는 새 계정으로 가입되며, 기존 회원은 마이페이지에서 직접 연동할 수 있습니다.",
+        "callback_label": "Callback URL (Redirect URI) — 콘솔에 등록",
+        "console_label": "개발자 콘솔 열기",
+        "naver_section_title": "네이버",
         "kakao_section_title": "카카오",
         "google_section_title": "Google",
-        "naver_section_title": "네이버",
-        "kakao_enabled": { "label": "카카오 로그인 사용", "hint": "로그인 화면에 카카오 로그인 버튼을 표시합니다." },
-        "kakao_client_id": { "label": "카카오 REST API 키", "hint": "카카오 개발자 콘솔의 REST API 키(앱 키)입니다." },
-        "kakao_client_secret": { "label": "카카오 Client Secret", "hint": "카카오 로그인 > 보안에서 발급받은 Client Secret입니다." },
-        "google_enabled": { "label": "구글 로그인 사용", "hint": "로그인 화면에 구글 로그인 버튼을 표시합니다." },
-        "google_client_id": { "label": "구글 클라이언트 ID", "hint": "Google Cloud Console에서 발급받은 OAuth 클라이언트 ID입니다." },
-        "google_client_secret": { "label": "구글 클라이언트 보안 비밀번호", "hint": "Google Cloud Console에서 발급받은 클라이언트 보안 비밀번호입니다." },
-        "naver_enabled": { "label": "네이버 로그인 사용", "hint": "로그인 화면에 네이버 로그인 버튼을 표시합니다." },
-        "naver_client_id": { "label": "네이버 Client ID", "hint": "네이버 개발자센터 애플리케이션의 Client ID입니다." },
-        "naver_client_secret": { "label": "네이버 Client Secret", "hint": "네이버 개발자센터 애플리케이션의 Client Secret입니다." }
+        "apple_section_title": "Apple",
+        "facebook_section_title": "Facebook",
+        "x_section_title": "X (Twitter)",
+        "line_section_title": "LINE",
+        "microsoft_section_title": "Microsoft (Entra ID)",
+        "github_section_title": "GitHub",
+        "naver_enabled": {
+            "label": "네이버 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 네이버 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "naver_client_id": {
+            "label": "네이버 Client ID",
+            "hint": "네이버 개발자센터 애플리케이션의 Client ID입니다."
+        },
+        "naver_client_secret": {
+            "label": "네이버 Client Secret",
+            "hint": "네이버 개발자센터 애플리케이션의 Client Secret입니다."
+        },
+        "kakao_enabled": {
+            "label": "카카오 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 카카오 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "kakao_client_id": {
+            "label": "카카오 REST API 키",
+            "hint": "카카오 개발자 콘솔의 REST API 키(앱 키)입니다."
+        },
+        "kakao_client_secret": {
+            "label": "카카오 Client Secret",
+            "hint": "카카오 로그인 > 보안에서 발급받은 Client Secret입니다."
+        },
+        "google_enabled": {
+            "label": "구글 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 구글 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "google_client_id": {
+            "label": "구글 클라이언트 ID",
+            "hint": "Google Cloud Console에서 발급받은 OAuth 클라이언트 ID입니다."
+        },
+        "google_client_secret": {
+            "label": "구글 클라이언트 보안 비밀번호",
+            "hint": "Google Cloud Console에서 발급받은 클라이언트 보안 비밀번호입니다."
+        },
+        "apple_enabled": {
+            "label": "애플 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 애플 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "apple_client_id": {
+            "label": "Services ID (client_id)",
+            "hint": "Certificates, Identifiers & Profiles > Identifiers > Services IDs에서 만든 식별자입니다(예: com.example.web). App ID가 아닙니다."
+        },
+        "apple_team_id": {
+            "label": "Team ID",
+            "hint": "Apple Developer 계정의 10자리 Team ID입니다(Membership 페이지)."
+        },
+        "apple_key_id": {
+            "label": "Key ID",
+            "hint": "Keys에서 \"Sign in with Apple\"을 체크해 만든 키의 10자리 Key ID입니다."
+        },
+        "apple_private_key": {
+            "label": "개인키 (.p8 파일 내용)",
+            "hint": "내려받은 AuthKey_XXXXXXXXXX.p8 파일을 텍스트로 열어 -----BEGIN PRIVATE KEY----- 부터 끝까지 그대로 붙여 넣습니다. 이 키로 client_secret(JWT)을 자동 서명합니다."
+        },
+        "facebook_enabled": {
+            "label": "페이스북 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 페이스북 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "facebook_client_id": {
+            "label": "Facebook 앱 ID",
+            "hint": "Meta for Developers > 앱 > 앱 설정 > 기본 설정의 앱 ID입니다."
+        },
+        "facebook_client_secret": {
+            "label": "Facebook 앱 시크릿 코드",
+            "hint": "같은 화면의 앱 시크릿 코드입니다."
+        },
+        "x_enabled": {
+            "label": "X 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 X 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "x_client_id": {
+            "label": "X OAuth 2.0 Client ID",
+            "hint": "X Developer Portal > 앱 > Keys and tokens > OAuth 2.0 Client ID입니다(API Key가 아닙니다)."
+        },
+        "x_client_secret": {
+            "label": "X OAuth 2.0 Client Secret",
+            "hint": "같은 화면의 OAuth 2.0 Client Secret입니다. 앱 유형은 \"Web App (Confidential client)\"로 설정하세요."
+        },
+        "line_enabled": {
+            "label": "라인 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 라인 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "line_client_id": {
+            "label": "LINE Channel ID",
+            "hint": "LINE Developers 콘솔 > LINE Login 채널 > Basic settings의 Channel ID입니다."
+        },
+        "line_client_secret": {
+            "label": "LINE Channel secret",
+            "hint": "같은 화면의 Channel secret입니다."
+        },
+        "microsoft_enabled": {
+            "label": "마이크로소프트 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 마이크로소프트 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "microsoft_client_id": {
+            "label": "애플리케이션(클라이언트) ID",
+            "hint": "Microsoft Entra 관리 센터 > 앱 등록 > 개요의 애플리케이션(클라이언트) ID입니다."
+        },
+        "microsoft_client_secret": {
+            "label": "클라이언트 암호 값",
+            "hint": "인증서 및 암호 > 새 클라이언트 암호에서 만든 \"값\"입니다(암호 ID가 아닙니다). 만료일이 지나면 새로 발급해 바꿔야 합니다."
+        },
+        "github_enabled": {
+            "label": "깃허브 로그인 사용",
+            "hint": "켜면 로그인 화면과 마이페이지 연동 목록에 깃허브 버튼이 표시됩니다. 켜려면 아래 항목을 모두 입력해야 합니다."
+        },
+        "github_client_id": {
+            "label": "GitHub Client ID",
+            "hint": "GitHub > Settings > Developer settings > OAuth Apps의 Client ID입니다."
+        },
+        "github_client_secret": {
+            "label": "GitHub Client Secret",
+            "hint": "같은 화면에서 생성한 Client secret입니다."
+        }
     },
     "login": {
-        "kakao_button": "카카오로 로그인",
-        "google_button": "Google로 로그인",
+        "heading": "SNS 간편 로그인",
+        "more_toggle": "그 외 로그인",
         "naver_button": "네이버로 로그인",
+        "kakao_button": "카카오로 로그인",
+        "google_button": "구글로 로그인",
+        "apple_button": "애플로 로그인",
+        "facebook_button": "페이스북으로 로그인",
+        "x_button": "X로 로그인",
+        "line_button": "라인으로 로그인",
+        "microsoft_button": "마이크로소프트로 로그인",
+        "github_button": "깃허브로 로그인",
+        "labels": {
+            "naver": "네이버",
+            "kakao": "카카오",
+            "google": "구글",
+            "apple": "애플",
+            "facebook": "페이스북",
+            "x": "X",
+            "line": "라인",
+            "microsoft": "마이크로소프트",
+            "github": "깃허브"
+        },
         "divider": "또는",
         "too_many_attempts": "로그인 요청이 너무 많습니다. 잠시 후 다시 시도해 주세요."
     },
     "profile": {
         "section_title": "소셜로그인 계정 관리",
+        "naver": "네이버",
         "kakao": "카카오",
         "google": "Google",
-        "naver": "네이버",
+        "apple": "Apple",
+        "facebook": "Facebook",
+        "x": "X",
+        "line": "LINE",
+        "microsoft": "Microsoft",
+        "github": "GitHub",
         "linked": "연동됨",
         "not_linked": "연동 안 됨",
         "link_button": "연동하기",

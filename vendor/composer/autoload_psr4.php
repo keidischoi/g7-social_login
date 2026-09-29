@@ -10,7 +10,6 @@ return array(
     'Symfony\\Polyfill\\Php82\\' => array($vendorDir . '/symfony/polyfill-php82'),
     'SocialiteProviders\\Manager\\' => array($vendorDir . '/socialiteproviders/manager/src'),
     'SocialiteProviders\\Kakao\\' => array($vendorDir . '/socialiteproviders/kakao'),
-    'SocialiteProviders\\Naver\\' => array($vendorDir . '/socialiteproviders/naver'),
     'Plugins\\G7\\SocialLogin\\' => array($baseDir . '/src', $baseDir . '/'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'League\\OAuth1\\Client\\' => array($vendorDir . '/league/oauth1-client/src'),

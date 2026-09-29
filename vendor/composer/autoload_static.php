@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit6f2e5a376f928eb4a5da26266269238b
+class ComposerStaticInit6a03da2e290f47e83f33053317aca380
 {
     public static $files = array (
         '5897ea0ac4cccf14d323035e65887801' => __DIR__ . '/..' . '/symfony/polyfill-php82/bootstrap.php',
@@ -12,72 +12,67 @@ class ComposerStaticInit6f2e5a376f928eb4a5da26266269238b
     );
 
     public static $prefixLengthsPsr4 = array (
-        'p' => 
+        'p' =>
         array (
             'phpseclib4\\' => 11,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php82\\' => 23,
             'SocialiteProviders\\Manager\\' => 27,
             'SocialiteProviders\\Kakao\\' => 25,
-            'SocialiteProviders\\Naver\\' => 25,
         ),
-        'P' => 
+        'P' =>
         array (
             'Plugins\\G7\\SocialLogin\\' => 23,
             'ParagonIE\\ConstantTime\\' => 23,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\OAuth1\\Client\\' => 21,
             'Laravel\\Socialite\\' => 18,
         ),
-        'F' => 
+        'F' =>
         array (
             'Firebase\\JWT\\' => 13,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'phpseclib4\\' => 
+        'phpseclib4\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
         ),
-        'Symfony\\Polyfill\\Php82\\' => 
+        'Symfony\\Polyfill\\Php82\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php82',
         ),
-        'SocialiteProviders\\Manager\\' => 
+        'SocialiteProviders\\Manager\\' =>
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/manager/src',
         ),
-        'SocialiteProviders\\Kakao\\' => 
+        'SocialiteProviders\\Kakao\\' =>
         array (
             0 => __DIR__ . '/..' . '/socialiteproviders/kakao',
         ),
-        'SocialiteProviders\\Naver\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/socialiteproviders/naver',
-        ),
-        'Plugins\\G7\\SocialLogin\\' => 
+        'Plugins\\G7\\SocialLogin\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
             1 => __DIR__ . '/../..' . '/',
         ),
-        'ParagonIE\\ConstantTime\\' => 
+        'ParagonIE\\ConstantTime\\' =>
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
         ),
-        'League\\OAuth1\\Client\\' => 
+        'League\\OAuth1\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/oauth1-client/src',
         ),
-        'Laravel\\Socialite\\' => 
+        'Laravel\\Socialite\\' =>
         array (
             0 => __DIR__ . '/..' . '/laravel/socialite/src',
         ),
-        'Firebase\\JWT\\' => 
+        'Firebase\\JWT\\' =>
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
@@ -99,9 +94,9 @@ class ComposerStaticInit6f2e5a376f928eb4a5da26266269238b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit6f2e5a376f928eb4a5da26266269238b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit6f2e5a376f928eb4a5da26266269238b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit6f2e5a376f928eb4a5da26266269238b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit6a03da2e290f47e83f33053317aca380::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit6a03da2e290f47e83f33053317aca380::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit6a03da2e290f47e83f33053317aca380::$classMap;
 
         }, null, ClassLoader::class);
     }

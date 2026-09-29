@@ -2,14 +2,15 @@
     "identifier": "g7-social_login",
     "vendor": "William Cho",
     "name": {
-        "ko": "소셜 로그인 (카카오/구글/네이버)",
-        "en": "Social Login (Kakao/Google/Naver)"
+        "ko": "소셜 로그인 (네이버/카카오/구글/애플/페이스북/X/라인/MS/깃허브)",
+        "en": "Social Login (Naver/Kakao/Google/Apple/Facebook/X/LINE/Microsoft/GitHub)"
     },
-    "version": "1.1.0",
+    "version": "1.2.0",
     "license": "MIT",
+    "github_url": "https://github.com/keidischoi/g7-social_login",
     "description": {
-        "ko": "카카오·구글·네이버 계정으로 로그인/회원가입할 수 있게 합니다. 제공자가 인증한 이메일일 때만, 그 이메일이 같고 이메일 인증을 마친 기존 회원과 자동으로 연동되며, 마이페이지에서 소셜 계정을 직접 연동/해제할 수 있습니다.",
-        "en": "Adds Kakao, Google and Naver OAuth login/signup. A social account is auto-linked only when the provider reports its email as verified and it matches an existing member whose own email is verified; members can manually link/unlink social accounts from their profile page."
+        "ko": "네이버·카카오·구글·애플·페이스북·X·라인·마이크로소프트·깃허브 계정으로 로그인/회원가입할 수 있게 합니다. 제공자별로 사용 여부를 따로 켜고 끌 수 있고, 로그인 화면에는 켜진 제공자만 원형 아이콘 버튼으로 표시됩니다. 제공자가 인증한 이메일일 때만, 그 이메일이 같고 이메일 인증을 마친 기존 회원과 자동으로 연동되며, 마이페이지에서 소셜 계정을 직접 연동/해제할 수 있습니다.",
+        "en": "Adds Naver, Kakao, Google, Apple, Facebook, X, LINE, Microsoft and GitHub OAuth login/signup. Each provider can be turned on or off individually, and only enabled providers appear on the login page as round icon buttons. A social account is auto-linked only when the provider reports its email as verified and it matches an existing member whose own email is verified; members can manually link/unlink social accounts from their profile page."
     },
     "g7_version": ">=7.0.10",
     "dependencies": {

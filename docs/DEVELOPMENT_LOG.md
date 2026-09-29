@@ -363,3 +363,29 @@ main (feature 브랜치 없이 단일 브랜치로 개발 — 아직 비공개 �
     트랜잭션 내부에만 존재, 자동연동 분기엔 없음). 실제 신규 가입 테스트는 계정이 늘어나 미실시.
   - 윌리엄 실브라우저(user 3): 프로필 수정 진입 시 편집 폼 바로 표시, 이름 변경 저장 성공 확인.
 - **기존 계정**: user 3 역할은 이번에 변경하지 않음(별도 승인 사항).
+
+### 2026-09-29 — 1.2.0: 제공자 9개 + 로그인 버튼 재디자인 (직접 수행)
+- **범위**: 애플·페이스북·X·라인·마이크로소프트·깃허브 추가(네이버는 1.1.0부터 있었음). 로그인 화면은 참고 이미지처럼
+  "SNS 간편 로그인" + 48px 원형 아이콘 + 작은 이름. 켠 제공자 중 앞 3개만 첫 줄, 나머지는 "그 외 로그인" 토글로 접음
+  (`_local.g7slMoreOpen`, `aria-expanded`/`aria-controls`, max-height·opacity 전환). 켠 제공자만 렌더하고 끈 제공자는
+  redirect/callback/애플 POST 콜백 모두 `provider_unavailable`.
+- **구현 메모**:
+  - 제공자 목록·키 필드·콘솔 URL은 `Support/Providers` 한 곳에서 정의, `plugin.php`·`defaults.json`·레이아웃·언어팩은
+    같은 정의에서 생성.
+  - 애플 client secret은 매 요청 ES256 서명(1시간). `id_token`은 JWKS로 서명·iss·aud·exp 검증. 애플 form_post는
+    SameSite=Lax 세션 쿠키가 안 실리므로 303으로 GET 콜백에 넘김.
+  - 이메일 자동 연동: 페이스북·라인·마이크로소프트는 끔(인증 플래그 없음 / nOAuth).
+  - 설정 검증 훅(`core.plugin_settings.update_validation_rules`)은 기존 `LoginPageWidgetListener`가 구독. 새 리스너
+    클래스를 추가하면 1.1.x → 1.2.0 제자리 업데이트 때 코어가 "업데이트 전 plugin.php"로 훅 캐시를 다시 구워 새 리스너가
+    빠진다(activate 로도 재생성 안 됨)는 것을 실제 설치본에서 확인하고 옮김.
+  - 코어 업데이트는 composer.json이 바뀌고 Composer가 없으면 `vendor-bundle.zip`이 있어야 한다(없으면 롤백). 한 번 번들
+    모드로 설치되면 이후 업데이트도 번들이 필요 → `vendor-bundle.zip/json`을 저장소에 포함.
+- **검증**:
+  - PHPUnit(Testbench) 32개/829 assertion: 9개 제공자 redirect URL(엔드포인트·client_id·redirect_uri·scope·state,
+    X PKCE S256, 애플 form_post), 모의 토큰/프로필 응답으로 콜백 전체(아이디·이메일·이름·아바타 매핑, 인증/임시 이메일),
+    잘못된 state(외부 호출 0), 끈/키 없는 제공자 거절, 애플 JWT 서명·키 형식 정규화·id_token 위조/만료/aud/iss 거절,
+    설정 스키마·언어 키 정합성.
+  - 실제 그누보드7 7.0.11(Composer 없는 환경)에 1.1.0 설치·설정 후 `plugin:update --zip`으로 1.2.0 업데이트: 기존 설정·
+    암호화 시크릿 유지, 새 키 기본값, 9개 redirect 302, 끈 제공자 거절, 설정 검증 422, 관리자 화면 저장/재로딩 유지.
+  - 헤드리스 크롬 스크린샷: 0·2·3·5·9개 켬, 펼침/접힘, 모바일(375px).
+
